@@ -1,6 +1,6 @@
-﻿using Music.Models;
+﻿using Music.Domain.Models;
 
-namespace Music.Data.Repositories.Interfaces;
+namespace Music.Application.Albums;
 
 public interface IAlbumRepository
 {

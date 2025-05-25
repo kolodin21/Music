@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Music.Data.Repositories;
+using Music.Application.Artists;
 
 namespace Music.Controllers;
 
-public class HomeController(MusicDbContext context) : Controller
+public class HomeController : Controller
 {
+    private readonly IArtistsService _artistsService;
+    public HomeController(IArtistsService artistsService)
+    {
+        _artistsService = artistsService;
+    }
     public async Task<IActionResult> Index()
     {
-        var artists = await context.Artists.AsNoTracking().ToListAsync();
-
+        var artists = await _artistsService.GetAll();
         return View(artists);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Music.Models;
+﻿namespace Music.Domain.Models;
 
 public class Album
 {

@@ -1,14 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Music.Data.Repositories;
-using Music.Data.Repositories.Interfaces;
+using Music.Application;
+using Music.Infrastructure.SQLite.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+var connection = builder.Configuration.GetConnectionString("MusicDbConnectionSQLite");
 
-var connection = builder.Configuration.GetConnectionString("MusicDbConnection");
-builder.Services.AddDbContext<MusicDbContext>(options =>
-    options.UseSqlServer(connection));
+builder.Services.AddDbContextSqLite(connection);
 
-builder.Services.AddScoped<IAlbumRepository, AlbumRepositoryAdo>();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
