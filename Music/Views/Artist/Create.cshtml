@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Music.Application.ModelsDto.Artist.ArtistCreateDto
+
+<div class="container mt-5">
+    <h2 class="mb-4">Добавить артиста</h2>
+
+    <form asp-controller="Artist" asp-action="Create" method="post">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Имя</label>
+            <input asp-for="Name" class="form-control" placeholder="Введите имя артиста" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="UrlImg" class="form-label">URL карточки артиста</label>
+            <input asp-for="UrlImg" class="form-control" placeholder="https://example.com/image.jpg" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}

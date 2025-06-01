@@ -11,6 +11,7 @@ public class AlbumController : Controller
     {
         _albumsService = albumsService;
     }
+
     public async Task<IActionResult> Index()
     {
         var albums = await _albumsService.GetAll();

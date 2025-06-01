@@ -1,0 +1,40 @@
+﻿@model Artist
+
+@{
+    ViewData["Title"] = "Детали исполнителя";
+}
+
+<div class="container mt-5">
+    <h2>Информация об исполнителе</h2>
+
+    <div class="card mt-4" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@Model.UrlImg" class="img-fluid rounded-start" alt="@Model.Name">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text"><small class="text-muted">ID: @Model.Id</small></p>
+                    <div class="d-flex justify-content-between">
+
+                        <a asp-controller="Artist"
+                           asp-action="Index"
+                           class="btn btn-secondary mt-2">Назад</a>
+                        <a asp-action="Update"
+                           asp-controller="Artist"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-secondary mt-2">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}

@@ -7,5 +7,15 @@ public class Artist
 
     public required string UrlImg { get; set; }
 
-    public required List<Album> Albums { get; set; }
+    public List<Album>? Albums { get; set; }
+
+    public Artist(string name, string urlImg)
+    {
+        Name = name;
+        UrlImg = urlImg;
+    }
+
+    public Artist()
+    {
+    }
 }

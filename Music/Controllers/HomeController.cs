@@ -13,6 +13,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var artists = await _artistsService.GetAll();
-        return View(artists);
+
+        return View(artists.Value);
     }
 }
