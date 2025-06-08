@@ -16,12 +16,12 @@ public class AlbumController : Controller
     {
         var albums = await _albumsService.GetAll();
 
-        return View(albums);
+        return View(albums.Value);
     }
 
     public async Task<IActionResult> Details(int id)
     {
-        var album = await _albumsService.GetDetailsById(id);
+        var album = await _albumsService.GetDetailsByIdAsync(id);
 
         return View(album);
     }

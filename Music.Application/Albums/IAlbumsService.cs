@@ -11,4 +11,5 @@ public interface IAlbumsService
     Task<QueryResult<int>> Create(AlbumCreateDto artist);
     Task<QueryResult<int>> Delete(int id);
     Task<QueryResult<Album>> Update(AlbumReadDto artist);
+    Task<QueryResult<Album>> GetDetailsByIdAsync(int id);
 }

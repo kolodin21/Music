@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Music.Application.ModelsDto.Artist.ArtistReadDto>
+
+@foreach (var artist in Model)
+{
+        <div class="col-md-4 col-lg-3">
+            <div class="card album-card">
+                <img src="@artist.UrlImg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@artist.Name</h5>
+                    <div class="d-flex justify-content-between">
+                        <a asp-controller="Artist" 
+                           asp-action="Details" 
+                           asp-route-id="@artist.Id" 
+                           class="btn btn-primary">Перейти</a>
+                        <form asp-controller="Artist"
+                              asp-action="Delete" 
+                              asp-route-id="@artist.Id" 
+                              method="post" 
+                              class="d-inline">
+                            <button type="submit" 
+                                    class="btn btn-danger" 
+                                    onclick="return confirm('Удалить артиста?');">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+}

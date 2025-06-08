@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Music.Application.Artists;
+using Music.Application.Extensions;
 using Music.Application.ModelsDto.Artist;
 using Music.Application.QueryResult;
 using Music.Domain.Models;
@@ -14,34 +15,41 @@ public class ArtistRepository : IArtistRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<QueryResult<List<Artist>>> GetAllAsync()
+    public async Task<QueryResult<IEnumerable<ArtistReadDto>>> GetAllAsync()
     {
         try
         {
-            var artists = await _dbContext.Artists.AsNoTracking().ToListAsync();
+            var artistsQuery = _dbContext.Artists.AsNoTracking();
 
-            return QueryResult<List<Artist>>.Success(artists);
+            var artists = await artistsQuery.ToListAsync();
+
+            var result = artists.Select(ArtistDtoFactory.Create);
+
+            return QueryResult<IEnumerable<ArtistReadDto>>.Success(result);
         }
         catch (Exception exp)
         {
-            return QueryResult<List<Artist>>.Failure(new[] { exp.Message });
+            return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
         }
     }
-    public async Task<QueryResult<Artist>> GetByIdAsync(int id)
+    public async Task<QueryResult<ArtistReadDto>> GetByIdAsync(int id)
     {
         try
         {
             var resultArtist = await _dbContext.Artists.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-            return resultArtist == null ?
-                QueryResult<Artist>.Failure(new[] { "Такой артист не существует" })
-                : QueryResult<Artist>.Success(resultArtist);
+            if (resultArtist == null)
+                QueryResult<ArtistReadDto>.Failure(new[] { "Такой артист не существует" });
+
+            var result = ArtistDtoFactory.Create(resultArtist);
+
+            return QueryResult<ArtistReadDto>.Success(result);
         }
         catch (Exception exp)
         {
-            return QueryResult<Artist>.Failure(new[] { exp.Message });
+            return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
         }
     }
-    public async Task<QueryResult<int>> CreateAsync(ArtistCreateDto artist)
+    public async Task<QueryResult<int>> CreateAsync(ArtistCreateUpdateDto artist)
     {
         try
         {
@@ -85,33 +93,52 @@ public class ArtistRepository : IArtistRepository
             return QueryResult<int>.Failure(new[] { exp.Message });
         }
     }
-    public async Task<QueryResult<Artist>> UpdateAsync(ArtistReadDto artist)
+    public async Task<QueryResult<ArtistReadDto>> UpdateAsync(ArtistReadDto artist)
     {
         try
         {
             var resultArtist = await _dbContext.Artists.FirstOrDefaultAsync(x => x.Id == artist.Id);
 
             if (resultArtist == null)
-                return QueryResult<Artist>.Failure(new[] { "Такого артиста не существует" });
+                return QueryResult<ArtistReadDto>.Failure(new[] { "Такого артиста не существует" });
 
             // Проверка на уникальность имени (исключая текущего артиста)
             var isNameTaken = await _dbContext.Artists
                 .AnyAsync(x => x.Name == artist.Name && x.Id != artist.Id);
 
             if (isNameTaken)
-                return QueryResult<Artist>.Failure(new[] { "Артист с таким именем уже существует" });
+                return QueryResult<ArtistReadDto>.Failure(new[] { "Артист с таким именем уже существует" });
 
             resultArtist.Name = artist.Name;
             resultArtist.UrlImg = artist.UrlImg;
 
+            var result = ArtistDtoFactory.Create(resultArtist);
             _dbContext.Update(resultArtist);
             await _dbContext.SaveChangesAsync();
-            return QueryResult<Artist>.Success(resultArtist);
+            return QueryResult<ArtistReadDto>.Success(result);
 
         }
         catch (Exception exp)
         {
-            return QueryResult<Artist>.Failure(new[] { exp.Message });
+            return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
+        }
+    }
+    public async Task<QueryResult<IEnumerable<ArtistReadDto>>> FindArtistAsync(string name)
+    {
+        try
+        {
+            var artistsQuery = _dbContext.Artists.AsNoTracking()
+                .ApplyIf(!string.IsNullOrEmpty(name), x => x.Name.StartsWith(name));
+
+            var artists = await artistsQuery.ToListAsync();
+
+            var result = artists.Select(ArtistDtoFactory.Create);
+
+            return QueryResult<IEnumerable<ArtistReadDto>>.Success(result);
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
         }
     }
 }

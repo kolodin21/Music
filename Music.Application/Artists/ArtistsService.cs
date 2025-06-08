@@ -1,6 +1,5 @@
 ﻿using Music.Application.ModelsDto.Artist;
 using Music.Application.QueryResult;
-using Music.Domain.Models;
 
 namespace Music.Application.Artists
 {
@@ -13,7 +12,7 @@ namespace Music.Application.Artists
             _artistRepository = artistRepository;
         }
 
-        public async Task<QueryResult<List<Artist>>> GetAll()
+        public async Task<QueryResult<IEnumerable<ArtistReadDto>>> GetAll()
         {
             try
             {
@@ -21,10 +20,10 @@ namespace Music.Application.Artists
             }
             catch (Exception e)
             {
-                return QueryResult<List<Artist>>.Failure(new[] { "Ошибка получения всех артистов" });
+                return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { "Ошибка получения всех артистов" });
             }
         }
-        public async Task<QueryResult<Artist>> GetById(int id)
+        public async Task<QueryResult<ArtistReadDto>> GetById(int id)
         {
             try
             {
@@ -35,10 +34,10 @@ namespace Music.Application.Artists
             }
             catch (Exception exp)
             {
-                return QueryResult<Artist>.Failure(new[] { exp.Message });
+                return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
             }
         }
-        public async Task<QueryResult<int>> Create(ArtistCreateDto artist)
+        public async Task<QueryResult<int>> Create(ArtistCreateUpdateDto artist)
         {
             try
             {
@@ -68,18 +67,30 @@ namespace Music.Application.Artists
                 return QueryResult<int>.Failure(new[] { exp.Message });
             }
         }
-        public async Task<QueryResult<Artist>> Update(ArtistReadDto? artist)
+        public async Task<QueryResult<ArtistReadDto>> Update(ArtistReadDto? artist)
         {
             try
             {
                 if (artist == null)
-                    return QueryResult<Artist>.Failure(new[] { "Ошибка обновления артиста" });
+                    return QueryResult<ArtistReadDto>.Failure(new[] { "Ошибка обновления артиста" });
 
                 return await _artistRepository.UpdateAsync(artist);
             }
             catch (Exception exp)
             {
-                return QueryResult<Artist>.Failure(new[] { exp.Message });
+                return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
+            }
+        }
+
+        public async Task<QueryResult<IEnumerable<ArtistReadDto>>> FindArtist(string title)
+        {
+            try
+            {
+                return await _artistRepository.FindArtistAsync(title);
+            }
+            catch (Exception exp)
+            {
+                return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
             }
         }
     }

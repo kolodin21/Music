@@ -28,14 +28,22 @@ public class AlbumRepository : IAlbumRepository
         }
     }
 
-    public async Task<Album> GetDetailsByIdAsync(int id)
+    public async Task<QueryResult<Album>> GetDetailsByIdAsync(int id)
     {
-        var album = await _dbContext.Albums
-                            .AsNoTracking()
-                            .Include(album => album.Songs)
-                            .FirstAsync(x => x.Id == id);
+        try
+        {
+            var album = await _dbContext.Albums
+                                .AsNoTracking()
+                                .Include(album => album.Songs)
+                                .FirstAsync(x => x.Id == id);
 
-        return album;
+            return QueryResult<Album>.Success(album);
+
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<Album>.Failure(new[] { exp.Message });
+        }
     }
     public async Task<QueryResult<Album>> GetByIdAsync(int id)
     {

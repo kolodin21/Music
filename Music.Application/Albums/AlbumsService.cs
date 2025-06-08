@@ -25,12 +25,43 @@ public class AlbumsService : IAlbumsService
 
     public async Task<QueryResult<List<Album>>> GetAll()
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _albumRepository.GetAllAsync();
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<List<Album>>.Failure(new[] { "Ошибка получения всех альбомов" });
+        }
     }
 
     public async Task<QueryResult<Album>> GetById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (id == 0)
+                throw new ArgumentNullException(nameof(id), "Id альбома не может быть 0 ");
+
+            return await _albumRepository.GetByIdAsync(id);
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<Album>.Failure(new[] { exp.Message });
+        }
+    }
+
+    public async Task<QueryResult<Album>> GetDetailsByIdAsync(int id)
+    {
+        try
+        {
+            if (id == 0)
+                throw new ArgumentNullException(nameof(id), "Id альбома не может быть 0 ");
+            return await _albumRepository.GetDetailsByIdAsync(id);
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<Album>.Failure(new[] { exp.Message });
+        }
     }
 
     public async Task<QueryResult<Album>> Update(AlbumReadDto artist)

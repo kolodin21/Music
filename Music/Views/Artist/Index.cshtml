@@ -1,4 +1,5 @@
-﻿@model Music.Views.Artist.ArtistIndexViewModel
+﻿@using Music.ViewModels.Artist
+@model ArtistIndexViewModel
 
 @{
     ViewData["Title"] = "Все артисты";
@@ -12,7 +13,7 @@
         <div class="container-fluid">
             <a class="btn btn-success" asp-controller="Artist" asp-action="Create">Добавить артиста</a>
             <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <input id="searchFields" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <label>
@@ -26,33 +27,8 @@
         </div>
     </nav>
 
-    <div class="row mt-5">
-        @foreach (var artist in Model.Artists)
-        {
-            <div class="col-md-4 col-lg-3">
-                <div class="card album-card">
-                    <img src="@artist.UrlImg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">@artist.Name</h5>
-                        <div class="d-flex justify-content-between">
-                            <a asp-controller="Artist" 
-                               asp-action="Details" 
-                               asp-route-id="@artist.Id" 
-                               class="btn btn-primary">Перейти</a>
-                            <form asp-controller="Artist"
-                                  asp-action="Delete" 
-                                  asp-route-id="@artist.Id" 
-                                  method="post" 
-                                  class="d-inline">
-                                <button type="submit" 
-                                        class="btn btn-danger" 
-                                        onclick="return confirm('Удалить артиста?');">Удалить</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+    <div class="row mt-5" id="artist-results">
+        @await Html.PartialAsync("_ArtistCardsPartial", Model.Artists)
     </div>
 </div>
 
@@ -61,4 +37,25 @@
     <div class="alert alert-danger mt-3">
         @TempData["ErrorMessage"]
     </div>
+}
+
+@section Scripts {
+    <script>
+        let timeoutId;
+
+        $("#searchFields").on("input", function () {
+            const name = $(this).val();
+
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(function () {
+                $.get("/Artist/Search", { name: name })
+                    .done(function (data) {
+                        $("#artist-results").html(data);
+                    })
+                    .fail(function () {
+                        $("#artist-results").html("<p class='text-danger'>Ошибка загрузки</p>");
+                    });
+            }, 300); 
+        });
+    </script>
 }
