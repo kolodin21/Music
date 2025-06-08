@@ -18,13 +18,13 @@ public class ArtistRepository : IArtistRepository
     {
         try
         {
-            var resultArtist = await _dbContext.Artists.AsNoTracking().ToListAsync();
+            var artists = await _dbContext.Artists.AsNoTracking().ToListAsync();
 
-            return QueryResult<List<Artist>>.Success(resultArtist);
+            return QueryResult<List<Artist>>.Success(artists);
         }
-        catch (Exception ex)
+        catch (Exception exp)
         {
-            return QueryResult<List<Artist>>.Failure(new[] { ex.Message });
+            return QueryResult<List<Artist>>.Failure(new[] { exp.Message });
         }
     }
     public async Task<QueryResult<Artist>> GetByIdAsync(int id)

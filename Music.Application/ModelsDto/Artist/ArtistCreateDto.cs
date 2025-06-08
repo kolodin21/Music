@@ -2,6 +2,6 @@
 
 public record ArtistCreateDto
 {
-    public string Name { get; init; } = string.Empty;
-    public string UrlImg { get; init; } = string.Empty;
+    public required string Name { get; init; }
+    public required string UrlImg { get; init; }
 }

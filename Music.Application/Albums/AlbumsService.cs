@@ -1,4 +1,6 @@
-﻿using Music.Domain.Models;
+﻿using Music.Application.ModelsDto.Album;
+using Music.Application.QueryResult;
+using Music.Domain.Models;
 
 namespace Music.Application.Albums;
 
@@ -11,9 +13,28 @@ public class AlbumsService : IAlbumsService
         _albumRepository = albumRepository;
     }
 
-    public async Task<List<Album>> GetAll() =>
-        await _albumRepository.GetAllAsync();
+    public async Task<QueryResult<int>> Create(AlbumCreateDto artist)
+    {
+        throw new NotImplementedException();
+    }
 
-    public async Task<Album> GetDetailsById(int id)
-        => await _albumRepository.GetDetailsByIdAsync(id);
+    public async Task<QueryResult<int>> Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<QueryResult<List<Album>>> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<QueryResult<Album>> GetById(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<QueryResult<Album>> Update(AlbumReadDto artist)
+    {
+        throw new NotImplementedException();
+    }
 }
