@@ -19,7 +19,10 @@ public class AlbumRepository : IAlbumRepository
     {
         try
         {
-            var albums = await _dbContext.Albums.AsNoTracking().ToListAsync();
+            var albumsQuery = _dbContext.Albums.AsNoTracking();
+
+            var albums = await albumsQuery.ToListAsync();
+
             return QueryResult<List<Album>>.Success(albums);
         }
         catch (Exception exp)
@@ -45,6 +48,7 @@ public class AlbumRepository : IAlbumRepository
             return QueryResult<Album>.Failure(new[] { exp.Message });
         }
     }
+
     public async Task<QueryResult<Album>> GetByIdAsync(int id)
     {
         try
@@ -107,8 +111,6 @@ public class AlbumRepository : IAlbumRepository
             return QueryResult<int>.Failure(new[] { exp.Message });
         }
     }
-
-
 
     public async Task<QueryResult<Album>> UpdateAsync(AlbumReadDto album)
     {

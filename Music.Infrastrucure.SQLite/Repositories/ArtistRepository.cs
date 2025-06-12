@@ -5,6 +5,7 @@ using Music.Application.ModelsDto.Artist;
 using Music.Application.QueryResult;
 using Music.Domain.Models;
 using Music.Infrastructure.SQLite.Configurations;
+using Music.Infrastructure.SQLite.Extensions;
 
 namespace Music.Infrastructure.SQLite.Repositories;
 
@@ -15,21 +16,22 @@ public class ArtistRepository : IArtistRepository
     {
         _dbContext = dbContext;
     }
-    public async Task<QueryResult<IEnumerable<ArtistReadDto>>> GetAllAsync()
+    public async Task<QueryResult<PagedResult<ArtistReadDto>>> GetAllAsync(int pageNumber, int pageSize)
     {
         try
         {
-            var artistsQuery = _dbContext.Artists.AsNoTracking();
+            var resultArtists = await _dbContext.Artists
+                .AsNoTracking()
+                .ToPagedResultAsync(pageNumber: pageNumber, pageSize: pageSize);
+            // Полный результат с метаданными
 
-            var artists = await artistsQuery.ToListAsync();
+            var result = resultArtists.Select(ArtistDtoFactory.Create);
 
-            var result = artists.Select(ArtistDtoFactory.Create);
-
-            return QueryResult<IEnumerable<ArtistReadDto>>.Success(result);
+            return QueryResult<PagedResult<ArtistReadDto>>.Success(result);
         }
         catch (Exception exp)
         {
-            return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
+            return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { exp.Message });
         }
     }
     public async Task<QueryResult<ArtistReadDto>> GetByIdAsync(int id)
@@ -123,22 +125,22 @@ public class ArtistRepository : IArtistRepository
             return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
         }
     }
-    public async Task<QueryResult<IEnumerable<ArtistReadDto>>> FindArtistAsync(string name)
+    public async Task<QueryResult<PagedResult<ArtistReadDto>>> FindArtistAsync(string name, int pageNumber, int pageSize)
     {
         try
         {
-            var artistsQuery = _dbContext.Artists.AsNoTracking()
-                .ApplyIf(!string.IsNullOrEmpty(name), x => x.Name.StartsWith(name));
+            var resultArtists = await _dbContext.Artists
+                .AsNoTracking()
+                .ApplyIf(!string.IsNullOrEmpty(name), x => x.Name.StartsWith(name))
+                .ToPagedResultAsync(pageNumber, pageSize);
 
-            var artists = await artistsQuery.ToListAsync();
+            var result = resultArtists.Select(ArtistDtoFactory.Create);
 
-            var result = artists.Select(ArtistDtoFactory.Create);
-
-            return QueryResult<IEnumerable<ArtistReadDto>>.Success(result);
+            return QueryResult<PagedResult<ArtistReadDto>>.Success(result);
         }
         catch (Exception exp)
         {
-            return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
+            return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { exp.Message });
         }
     }
 }

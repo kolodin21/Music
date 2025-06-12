@@ -1,4 +1,5 @@
 ﻿@using Music.ViewModels.Artist
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ArtistIndexViewModel
 
 @{
@@ -6,31 +7,28 @@
 }
 
 <div class="container py-5">
-
     <h1 class="text-center mb-5">Все артисты</h1>
 
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light mb-3">
         <div class="container-fluid">
             <a class="btn btn-success" asp-controller="Artist" asp-action="Create">Добавить артиста</a>
-            <form class="d-flex">
-                <input id="searchFields" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+
+            <form method="get" asp-controller="Artist" asp-action="Index" class="d-flex">
+                <input name="searchName"
+                       class="form-control me-2"
+                       type="search"
+                       placeholder="Поиск"
+                       id="searchFields"
+                       value="@Model.SearchName" />
             </form>
-            <label>
-                Сортировка:
-                <select class="form-select">
-                    <option value="0">--</option>
-                    <option value="1">По возрастанию</option>
-                    <option value="2">По убыванию</option>
-                </select>
-            </label>
         </div>
     </nav>
 
-    <div class="row mt-5" id="artist-results">
-        @await Html.PartialAsync("_ArtistCardsPartial", Model.Artists)
+    <div id="artist-content">
+        @await Component.InvokeAsync("SearchPaginationArtist", Model.Artist)
     </div>
 </div>
+
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -41,21 +39,48 @@
 
 @section Scripts {
     <script>
-        let timeoutId;
+        $(document).ready(function () {
 
-        $("#searchFields").on("input", function () {
-            const name = $(this).val();
+            // Отменяем поведение обычных ссылок для пагинации
+            $(document).on("click", ".page-link", function (e) {
+                e.preventDefault(); 
 
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(function () {
-                $.get("/Artist/Search", { name: name })
-                    .done(function (data) {
-                        $("#artist-results").html(data);
-                    })
-                    .fail(function () {
-                        $("#artist-results").html("<p class='text-danger'>Ошибка загрузки</p>");
-                    });
-            }, 300); 
+                const href = $(this).attr("href");
+                if (!href) return;
+
+                // Парсим параметры из ссылки
+                const url = new URL(href, window.location.origin);
+
+                const searchName = url.searchParams.get("searchName") || "";
+                const pageNumber = parseInt(url.searchParams.get("pageNumber")) || 1;
+                const pageSize = parseInt(url.searchParams.get("pageSize")) || 2;
+
+                loadArtistContent(searchName, pageNumber, pageSize);
+            });
+
+            // Автозагрузка при вводе
+            let timeoutId;
+            $("#searchFields").on("input", function () {
+                clearTimeout(timeoutId);
+                const searchTerm = $(this).val();
+                timeoutId = setTimeout(function () {
+                    loadArtistContent(searchTerm, 1, 2);
+                }, 300);
+            });
+
+            // Функция загрузки контента по AJAX
+            function loadArtistContent(searchName, pageNumber, pageSize) {
+                $.get("/Artist/Index", {
+                    searchName: searchName,
+                    pageNumber: pageNumber,
+                    pageSize: pageSize,
+                    isAjax: true
+                }).done(function (data) {
+                    $("#artist-content").html(data);
+                }).fail(function () {
+                    $("#artist-content").html("<p class='text-danger'>Ошибка загрузки</p>");
+                });
+            }
         });
     </script>
 }

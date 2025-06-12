@@ -23,6 +23,6 @@ public class AlbumController : Controller
     {
         var album = await _albumsService.GetDetailsByIdAsync(id);
 
-        return View(album);
+        return View(album.Value);
     }
 }

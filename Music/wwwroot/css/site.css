@@ -1,31 +1,101 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
+    height: 100%; /* Добавляем */
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+header.navbar {
+    flex-shrink: 0;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+main {
+    flex: 1; /* Занимаем всё доступное пространство */
+    background: linear-gradient(to bottom, rgba(5, 5, 15, 0.95) 0%, rgba(15, 10, 40, 0.9) 100%);
+    color: #fff;
+    padding: 2rem 0;
+    min-height: calc(100vh - 150px);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+footer {
+    flex-shrink: 0; /* Фиксируем footer */
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.15) 0%, transparent 25%), radial-gradient(circle at 80% 70%, rgba(79, 172, 254, 0.15) 0%, transparent 25%);
+    z-index: 0;
+}
+
+main > .container {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(79, 172, 254, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(79, 172, 254, 0);
+    }
+}
+
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        animation: pulse 2s infinite;
+    }
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
 }

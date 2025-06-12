@@ -1,0 +1,21 @@
+﻿@model Music.Views.Shared.Components.SearchPaginationArtist.SearchPaginationArtist
+@using Music.Views.Shared.Components
+@using Music.Views.Shared.Components.Pagination
+
+<div id="artist-content">
+
+    @Html.ArtistCards(Model.Artists)
+
+    <!-- Пагинация -->
+    @await Component.InvokeAsync("Pagination", new Pagination
+       {
+           ControllerName = "Artist",
+           ActionName = "Index",
+           PageNumber = Model.Artists.PageNumber,
+           PageSize = Model.Artists.PageSize,
+           TotalCount = Model.Artists.TotalCount,
+           TotalPages = Model.Artists.TotalPages,
+           SearchName = Model.SearchName
+       })
+
+</div> 

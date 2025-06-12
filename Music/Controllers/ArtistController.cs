@@ -2,6 +2,7 @@
 using Music.Application.Artists;
 using Music.Application.ModelsDto.Artist;
 using Music.ViewModels.Artist;
+using Music.Views.Shared.Components.SearchPaginationArtist;
 
 namespace Music.Controllers;
 
@@ -25,18 +26,37 @@ public class ArtistController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Search(string name)
-    {
-        var artist = await _artistsService.FindArtist(name);
+    //[HttpGet]
+    //public async Task<IActionResult> Search(
+    //    string name,
+    //    int pageNumber = 1,
+    //    int pageSize = 2,
+    //    bool isAjax = false)
+    //{
+    //    var result = await _artistsService.FindArtist(name, pageNumber, pageSize);
 
-        if (artist.IsSuccess)
-        {
-            return PartialView("_ArtistCardsPartial", artist.Value.ToList());
+    //    if (!result.IsSuccess)
+    //    {
+    //        return isAjax
+    //            ? Content("<p class='text-danger'>Ошибка загрузки</p>")
+    //            : RedirectToAction(nameof(Index));
+    //    }
 
-        }
-        return RedirectToAction(nameof(Index));
-    }
+    //    if (isAjax)
+    //    {
+    //        // Возвращаем только ViewComponent с нужным именем и параметрами
+    //        return ViewComponent("SearchPaginationArtist", result.Value);
+    //    }
+    //    else
+    //    {
+    //        // Возвращаем обычный View с моделью, если не ajax
+    //        var model = new ArtistIndexViewModel
+    //        {
+    //            Artists = result.Value,
+    //        };
+    //        return View("Index", model);
+    //    }
+    //}
 
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
@@ -68,14 +88,42 @@ public class ArtistController : Controller
     }
 
     //Навигация
-    public async Task<IActionResult> Index()
+    [HttpGet]
+    public async Task<IActionResult> Index(
+        string? searchName = null,
+        int pageNumber = 1,
+        int pageSize = 3,
+        bool isAjax = false)
     {
-        var artist = await _artistsService.GetAll();
+        var result = string.IsNullOrWhiteSpace(searchName)
+            ? await _artistsService.GetAll(pageNumber, pageSize)
+            : await _artistsService.FindArtist(searchName, pageNumber, pageSize);
 
-        return View(new ArtistIndexViewModel
+        if (!result.IsSuccess)
         {
-            Artists = artist.Value
-        });
+            return isAjax
+                ? Content("<p class='text-danger'>Ошибка при загрузке данных</p>")
+                : RedirectToAction(nameof(Index));
+        }
+
+        var searchModel = new SearchPaginationArtist
+        {
+            Artists = result.Value,
+            SearchName = searchName,
+        };
+
+        if (isAjax)
+        {
+            return ViewComponent("SearchPaginationArtist", searchModel);
+        }
+
+        var viewModel = new ArtistIndexViewModel
+        {
+            Artist = searchModel,
+            SearchName = searchName,
+        };
+
+        return View(viewModel);
     }
 
     public async Task<IActionResult> Update(int id)

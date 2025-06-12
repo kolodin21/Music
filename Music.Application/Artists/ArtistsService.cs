@@ -1,4 +1,5 @@
-﻿using Music.Application.ModelsDto.Artist;
+﻿using Music.Application.Extensions;
+using Music.Application.ModelsDto.Artist;
 using Music.Application.QueryResult;
 
 namespace Music.Application.Artists
@@ -12,15 +13,15 @@ namespace Music.Application.Artists
             _artistRepository = artistRepository;
         }
 
-        public async Task<QueryResult<IEnumerable<ArtistReadDto>>> GetAll()
+        public async Task<QueryResult<PagedResult<ArtistReadDto>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                return await _artistRepository.GetAllAsync();
+                return await _artistRepository.GetAllAsync(pageNumber, pageSize);
             }
             catch (Exception e)
             {
-                return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { "Ошибка получения всех артистов" });
+                return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { "Ошибка получения всех артистов" });
             }
         }
         public async Task<QueryResult<ArtistReadDto>> GetById(int id)
@@ -82,15 +83,15 @@ namespace Music.Application.Artists
             }
         }
 
-        public async Task<QueryResult<IEnumerable<ArtistReadDto>>> FindArtist(string title)
+        public async Task<QueryResult<PagedResult<ArtistReadDto>>> FindArtist(string name, int pageNumber, int pageSize)
         {
             try
             {
-                return await _artistRepository.FindArtistAsync(title);
+                return await _artistRepository.FindArtistAsync(name, pageNumber, pageSize);
             }
             catch (Exception exp)
             {
-                return QueryResult<IEnumerable<ArtistReadDto>>.Failure(new[] { exp.Message });
+                return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { exp.Message });
             }
         }
     }

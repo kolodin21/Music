@@ -1,0 +1,73 @@
+﻿.album-card {
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.album-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.card-title {
+    color: white;
+}
+.album-header {
+    background: linear-gradient(rgba(40, 40, 80, 0.6), rgba(20, 20, 50, 0.6)), url('https://via.placeholder.com/1920x500?text=Album+Background');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+}
+
+.album-cover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0);
+    transition: transform 0.3s;
+}
+
+.album-cover:hover {
+    transform: scale(1.03);
+}
+
+.track-list {
+    margin-top: 2rem;
+}
+
+.track-item {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.track-item:hover {
+    background-color: #f8f9fa;
+}
+
+.track-number {
+    font-weight: bold;
+    margin-right: 1.5rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.track-info {
+    flex-grow: 1;
+}
+
+.track-duration {
+    color: #6c757d;
+    margin: 0 1.5rem;
+}
+
+.audio-player {
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.album-info {
+    margin-top: 2rem;
+}

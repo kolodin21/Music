@@ -1,0 +1,50 @@
+﻿@model Music.Views.Shared.Components.Pagination.Pagination;
+
+@if (Model.TotalCount > 0)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @if (Model.PageNumber > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="@Model.ControllerName"
+                       asp-action="@Model.ActionName"
+                       asp-route-searchName="@Model.SearchName"
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                       asp-route-pageSize="@Model.PageSize">
+                        Назад
+                    </a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+            <a class="page-link"
+               asp-controller="@Model.ControllerName"
+               asp-action="@Model.ActionName"
+               asp-route-searchName="@Model.SearchName"
+               asp-route-pageNumber="@i"
+               asp-route-pageSize="@Model.PageSize">
+                @i
+            </a>
+        </li>
+            }
+
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-controller="@Model.ControllerName"
+                       asp-action="@Model.ActionName" 
+                       asp-route-searchName="@Model.SearchName"
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                       asp-route-pageSize="@Model.PageSize">
+                        Вперед
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+} 

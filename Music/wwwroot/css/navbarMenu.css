@@ -1,0 +1,64 @@
+﻿.navbar {
+    background: rgba(20, 20, 20, 0.95) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 30px rgba(0,0,0,0.3);
+    transition: all 0.5s ease;
+}
+
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #fff !important;
+    letter-spacing: 1px;
+}
+
+.nav-item {
+    margin: 0 5px;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.8) !important;
+    position: relative;
+    padding: 8px 15px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #8a2be2, #00bfff);
+    transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+    width: 70%;
+}
+
+.navbar-toggler {
+
+    border: none;
+    padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.3);
+}
+.navbar-nav .nav-item {
+    margin: 0 1.3rem; /* Отступы между пунктами */
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.2rem; /* Размер шрифта */
+    padding: 1rem 2rem; /* Внутренние отступы */
+    letter-spacing: 0.5px; /* Разрежение букв */
+}
