@@ -26,38 +26,6 @@ public class ArtistController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    //[HttpGet]
-    //public async Task<IActionResult> Search(
-    //    string name,
-    //    int pageNumber = 1,
-    //    int pageSize = 2,
-    //    bool isAjax = false)
-    //{
-    //    var result = await _artistsService.FindArtist(name, pageNumber, pageSize);
-
-    //    if (!result.IsSuccess)
-    //    {
-    //        return isAjax
-    //            ? Content("<p class='text-danger'>Ошибка загрузки</p>")
-    //            : RedirectToAction(nameof(Index));
-    //    }
-
-    //    if (isAjax)
-    //    {
-    //        // Возвращаем только ViewComponent с нужным именем и параметрами
-    //        return ViewComponent("SearchPaginationArtist", result.Value);
-    //    }
-    //    else
-    //    {
-    //        // Возвращаем обычный View с моделью, если не ajax
-    //        var model = new ArtistIndexViewModel
-    //        {
-    //            Artists = result.Value,
-    //        };
-    //        return View("Index", model);
-    //    }
-    //}
-
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {

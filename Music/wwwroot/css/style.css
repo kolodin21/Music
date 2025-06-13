@@ -71,3 +71,13 @@
 .album-info {
     margin-top: 2rem;
 }
+
+.pagination-fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    background: rgba(20, 20, 20, 0.95);
+    box-shadow: 0 2px 30px rgba(0,0,0,0.3);
+}

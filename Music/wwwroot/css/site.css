@@ -83,11 +83,11 @@ main > .container {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        animation: pulse 2s infinite;
-    }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
 
 .form-floating > .form-control-plaintext::placeholder,
 .form-floating > .form-control::placeholder {

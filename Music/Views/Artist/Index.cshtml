@@ -5,30 +5,29 @@
 @{
     ViewData["Title"] = "Все артисты";
 }
+<div class="d-flex flex-column min-vh-100">
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Все артисты</h1>
 
-<div class="container py-5">
-    <h1 class="text-center mb-5">Все артисты</h1>
-
-    <nav class="navbar navbar-light bg-light mb-3">
-        <div class="container-fluid">
-            <a class="btn btn-success" asp-controller="Artist" asp-action="Create">Добавить артиста</a>
-
-            <form method="get" asp-controller="Artist" asp-action="Index" class="d-flex">
-                <input name="searchName"
-                       class="form-control me-2"
-                       type="search"
-                       placeholder="Поиск"
-                       id="searchFields"
-                       value="@Model.SearchName" />
-            </form>
+        <nav class="navbar navbar-light bg-light mb-3">
+            <div class="container-fluid">
+                <form method="get" asp-controller="Artist" asp-action="Index" class="d-flex">
+                    <input name="searchName"
+                           class="form-control me-2"
+                           type="search"
+                           placeholder="Поиск"
+                           id="searchFields"
+                           value="@Model.SearchName" />
+                </form>
+                <a class="btn btn-success" asp-controller="Artist" asp-action="Create">Добавить артиста</a>
+            </div>
+        </nav>
+        <div id="artist-content">
+            @await Component.InvokeAsync("SearchPaginationArtist", Model.Artist)
         </div>
-    </nav>
 
-    <div id="artist-content">
-        @await Component.InvokeAsync("SearchPaginationArtist", Model.Artist)
     </div>
 </div>
-
 
 @if (TempData["ErrorMessage"] != null)
 {

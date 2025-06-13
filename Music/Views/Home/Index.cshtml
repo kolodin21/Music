@@ -1,36 +1,30 @@
-﻿@using Music.Views.Shared.Components.Pagination
-@model Music.ViewModels.Home.HomeIndexViewModel
+﻿@model Music.ViewModels.Home.HomeIndexViewModel
 
-<div class="container py-5">
-    <h1 class="text-center mb-5">Популярные Артисты</h1>
+<div class="d-flex flex-column min-vh-100">
+    <div class="container py-5 mb-5">
+        <!-- Добавил нижний отступ, чтобы контент не перекрывался пагинацией -->
+        <h1 class="text-center mb-5">Популярные Артисты</h1>
 
-    <div class="row">
-
-        @foreach (var artist in Model.Artists.Items)
-        {
-            <div class="col-md-4 col-lg-3">
-                <div class="card album-card">
-                    <img src="@artist.UrlImg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">@artist.Name</h5>
-                        <a asp-controller="Artist" 
-                           asp-action="Details" 
-                           asp-route-id="@artist.Id" 
-                           class="btn btn-primary">Перейти</a>
+        <div class="row">
+            @foreach (var artist in Model.Artists)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card album-card">
+                        <img src="@artist.UrlImg" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@artist.Name</h5>
+                            <a asp-controller="Artist" 
+                               asp-action="Details" 
+                               asp-route-id="@artist.Id" 
+                               class="btn btn-primary">Перейти</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
+
+
 </div>
 
-<!-- Пагинация -->
-@await Component.InvokeAsync("Pagination",new Pagination
-{
-    ControllerName = "Home",
-    ActionName = "Index",
-    PageNumber = Model.Artists.PageNumber,
-    PageSize = Model.Artists.PageSize,
-    TotalCount = Model.Artists.TotalCount,
-    TotalPages = Model.Artists.TotalPages
-})
+@await Component.InvokeAsync("Pagination",Model.Pagination)
