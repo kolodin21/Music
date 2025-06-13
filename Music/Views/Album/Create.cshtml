@@ -1,0 +1,131 @@
+﻿@model Music.ViewModels.Album.AlbumCreateViewModel
+
+@{
+    ViewData["Title"] = "Добавление альбома";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Добавить альбом для @Model.Artist.Name </h2>
+
+    <form asp-controller="Album" asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label asp-for="@Model.Album.Name" class="form-label">Навзвание альбома</label>
+            <input asp-for="@Model.Album.Name" class="form-control" placeholder="Введите название"/>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Album.UrlImg" class="form-label">URL карточки альбома</label>
+            <input asp-for="@Model.Album.UrlImg" class="form-control" placeholder="https://example.com/image.jpg"/>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Album.YearOfIssue" class="form-label">Дата релиза</label>
+            <input asp-for="@Model.Album.YearOfIssue" class="form-control" placeholder="Введите дату"/>
+        </div>
+
+        <h3 class="mt-4">Треки</h3>
+        <!-- скрываемые поля для треков, которые будут динамически добавляться -->
+        <div id="hiddenSongsInputs"></div>
+
+        <!-- Контейнер для динамически добавляемых треков -->
+        <div id="songsContainer"></div>
+
+        <!--Поле для добавления треков-->
+        <div id="inputAddSongs"></div>
+
+        <button id="addSongButton" class="btn btn-success mb-3">Добавить трек</button>
+
+        <button type="submit" class="btn btn-primary mb-3">Добавить альбом</button>
+    </form>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+        
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            let songIndex = 0;
+            const songs = [];
+
+            // Добавить новое поле для ввода трека
+            function addSongField() {
+                const songField = `
+                    <div class="song-input mb-3">
+                        <input type="text" class="form-control name" placeholder="Название трека" />
+                        <input type="text" class="form-control url mt-1" placeholder="https://example.com/song.mp3" />
+                        <button type="button" class="btn btn-success mt-2 saveSong">Сохранить</button>
+                    </div>
+                `;
+                $('#inputAddSongs').append(songField);
+            }
+
+            // При клике на "Добавить трек"
+            $('#addSongButton').on('click',
+                function(e) {
+                    e.preventDefault();
+                    addSongField();
+                });
+
+            // При клике на "Сохранить"
+            $('#inputAddSongs').on('click',
+                '.saveSong',
+                function() {
+                    const container = $(this).closest('.song-input');
+                    const name = container.find('.name').val().trim();
+                    const url = container.find('.url').val().trim();
+
+                    if (!name || !url) {
+                        alert("Пожалуйста, заполните оба поля");
+                        return;
+                    }
+
+                    // Добавляем в список треков
+                    songs.push({ name, url });
+
+                    // Обновляем hidden inputs
+                    renderHiddenInputs();
+
+                    // Показываем трек в списке
+                    const trackHtml = `
+                       <div class="track-item">
+                            <div class="track-number">${songIndex + 1}</div>
+                            <div class="track-info">
+                                <h6 class="mb-0">${name}</h6>
+                            </div>
+                            <audio controls class="audio-player">
+                                <source src="${url}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио элемент.
+                            </audio>
+                        </div>
+                `;
+                    $('#songsContainer').append(trackHtml);
+
+                    // Удаляем поле ввода
+                    container.remove();
+                    songIndex++;
+                });
+
+            // Обновляем hidden inputs для отправки на сервер
+            function renderHiddenInputs() {
+                $('#hiddenSongsInputs').empty();
+                songs.forEach((song, index) => {
+                    $('#hiddenSongsInputs').append(`
+                        <input type="hidden" name="Album.Songs[${index}].Name" value="${song.name}" />
+                        <input type="hidden" name="Album.Songs[${index}].UrlSong" value="${song.url}" />
+                    `);
+                });
+            }
+
+            // Инициализация
+            addSongField();
+        });
+    </script>
+}

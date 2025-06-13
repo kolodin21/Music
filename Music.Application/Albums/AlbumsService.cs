@@ -1,6 +1,8 @@
-﻿using Music.Application.ModelsDto.Album;
+﻿using Music.Application.Extensions;
+using Music.Application.ModelsDto.Album;
 using Music.Application.QueryResult;
 using Music.Domain.Models;
+using static Music.Application.Validator.Validate;
 
 namespace Music.Application.Albums;
 
@@ -15,23 +17,43 @@ public class AlbumsService : IAlbumsService
 
     public async Task<QueryResult<int>> Create(AlbumCreateDto artist)
     {
-        throw new NotImplementedException();
+        try
+        {
+            ThrowIfNull(artist.Name, "Название альбомам не должно быть пустым");
+            ThrowIfNull(artist.UrlImg, "Обложка альбома не должна быть пустая");
+            ThrowIfNull(artist.Songs, "Альбом должен содержать хотя бы 1 песню");
+
+            return await _albumRepository.CreateAsync(artist);
+        }
+        catch (Exception exp)
+        {
+            return QueryResult<int>.Failure(new[] { exp.Message });
+        }
     }
 
     public async Task<QueryResult<int>> Delete(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            ThrowIfZero(id, "Id альбома не может быть 0");
+
+            return await _albumRepository.DeleteAsync(id);
+        }
+        catch (Exception e)
+        {
+            return QueryResult<int>.Failure(new[] { e.Message });
+        }
     }
 
-    public async Task<QueryResult<List<Album>>> GetAll()
+    public async Task<QueryResult<PagedResult<Album>>> GetAll(int pageNumber, int pageSize)
     {
         try
         {
-            return await _albumRepository.GetAllAsync();
+            return await _albumRepository.GetAllAsync(pageNumber, pageSize);
         }
         catch (Exception exp)
         {
-            return QueryResult<List<Album>>.Failure(new[] { "Ошибка получения всех альбомов" });
+            return QueryResult<PagedResult<Album>>.Failure(new[] { "Ошибка получения всех альбомов" });
         }
     }
 
@@ -39,8 +61,7 @@ public class AlbumsService : IAlbumsService
     {
         try
         {
-            if (id == 0)
-                throw new ArgumentNullException(nameof(id), "Id альбома не может быть 0 ");
+            ThrowIfZero(id, "Id альбома не может быть 0");
 
             return await _albumRepository.GetByIdAsync(id);
         }
@@ -54,8 +75,8 @@ public class AlbumsService : IAlbumsService
     {
         try
         {
-            if (id == 0)
-                throw new ArgumentNullException(nameof(id), "Id альбома не может быть 0 ");
+            ThrowIfZero(id, "Id альбома не может быть 0");
+
             return await _albumRepository.GetDetailsByIdAsync(id);
         }
         catch (Exception exp)

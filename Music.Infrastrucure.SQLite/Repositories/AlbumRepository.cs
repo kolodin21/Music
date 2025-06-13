@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Music.Application.Albums;
+using Music.Application.Extensions;
 using Music.Application.ModelsDto.Album;
 using Music.Application.QueryResult;
 using Music.Domain.Models;
 using Music.Infrastructure.SQLite.Configurations;
+using Music.Infrastructure.SQLite.Extensions;
 
 namespace Music.Infrastructure.SQLite.Repositories;
 
@@ -15,19 +17,19 @@ public class AlbumRepository : IAlbumRepository
         _dbContext = dbContext;
     }
 
-    public async Task<QueryResult<List<Album>>> GetAllAsync()
+    public async Task<QueryResult<PagedResult<Album>>> GetAllAsync(int pageNumber, int pageSize)
     {
         try
         {
-            var albumsQuery = _dbContext.Albums.AsNoTracking();
+            var albumsQuery = await _dbContext.Albums
+                .AsNoTracking()
+                .ToPagedResultAsync(pageNumber, pageSize);
 
-            var albums = await albumsQuery.ToListAsync();
-
-            return QueryResult<List<Album>>.Success(albums);
+            return QueryResult<PagedResult<Album>>.Success(albumsQuery);
         }
         catch (Exception exp)
         {
-            return QueryResult<List<Album>>.Failure(new[] { exp.Message });
+            return QueryResult<PagedResult<Album>>.Failure(new[] { exp.Message });
         }
     }
 

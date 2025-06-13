@@ -1,10 +1,11 @@
-﻿@model List<Album>
+﻿@model Music.Application.Extensions.PagedResult<Album>
+
 <div class="container py-5">
     <h1 class="text-center mb-5">Популярные Альбомы</h1>
 
     <div class="row">
 
-        @foreach (var album in Model)
+        @foreach (var album in Model.Items)
         {
             <div class="col-md-4 col-lg-3">
                 <div class="card album-card">

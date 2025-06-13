@@ -104,6 +104,7 @@ public class ArtistController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    //Навигация
     public IActionResult Create() => View();
 
 }

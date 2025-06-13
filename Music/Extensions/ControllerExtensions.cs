@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Music.Controllers;
+namespace Music.Extensions;
 
 public static class ControllerExtensions
 {

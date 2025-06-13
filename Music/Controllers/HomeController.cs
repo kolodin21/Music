@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Music.Application.Artists;
+using Music.Extensions;
 using Music.ViewModels.Home;
 using Music.Views.Shared.Components.Pagination;
 

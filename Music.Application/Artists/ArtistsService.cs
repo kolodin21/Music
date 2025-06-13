@@ -1,6 +1,7 @@
 ﻿using Music.Application.Extensions;
 using Music.Application.ModelsDto.Artist;
 using Music.Application.QueryResult;
+using static Music.Application.Validator.Validate;
 
 namespace Music.Application.Artists
 {
@@ -28,8 +29,7 @@ namespace Music.Application.Artists
         {
             try
             {
-                if (id == 0)
-                    throw new ArgumentNullException(nameof(id), "Id не может быть равно 0");
+                ThrowIfZero(id, "Id не может быть равно 0");
 
                 return await _artistRepository.GetByIdAsync(id);
             }
@@ -42,10 +42,8 @@ namespace Music.Application.Artists
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(artist.Name))
-                    throw new ArgumentNullException(nameof(artist.Name), "Имя исполнителя не может быть пустым");
-                if (string.IsNullOrWhiteSpace(artist.UrlImg))
-                    throw new ArgumentNullException(nameof(artist.UrlImg), "Отсутствует карточка артиста");
+                ThrowIfNull(artist.Name, "Имя исполнителя не может быть пустым");
+                ThrowIfNull(artist.UrlImg, "Отсутствует карточка артиста");
 
                 return await _artistRepository.CreateAsync(artist);
             }
