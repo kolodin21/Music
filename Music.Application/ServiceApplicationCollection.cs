@@ -5,7 +5,7 @@ using Music.Application.Entity.Songs;
 
 namespace Music.Application;
 
-public static class ServiceCollectionExtensions
+public static class ServiceApplicationCollection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

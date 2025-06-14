@@ -25,10 +25,8 @@
         <div id="artist-content">
             @await Component.InvokeAsync("SearchPaginationArtist", Model.Artist)
         </div>
-
     </div>
 </div>
-
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger mt-3">

@@ -44,8 +44,11 @@
         <div class="alert alert-danger mt-3">
             @TempData["ErrorMessage"]
         </div>
+        //TODO Настроить возможность добавления трека уже в бд
+        //TODO Добавить возможность добавления картинки. 
     }
 </div>
+
 
         
 @section Scripts
@@ -55,17 +58,16 @@
             let songIndex = 0;
             const songs = [];
 
-            // Добавить новое поле для ввода трека
             function addSongField() {
                 const songField = `
                     <div class="song-input mb-3">
-                        <input type="text" class="form-control name" placeholder="Название трека" />
-                        <input type="text" class="form-control url mt-1" placeholder="https://example.com/song.mp3" />
+                        <input type="file" name="audioFiles" id="inputFile" multiple />
                         <button type="button" class="btn btn-success mt-2 saveSong">Сохранить</button>
-                    </div>
+                    </div>  
                 `;
                 $('#inputAddSongs').append(songField);
             }
+
 
             // При клике на "Добавить трек"
             $('#addSongButton').on('click',
@@ -75,43 +77,51 @@
                 });
 
             // При клике на "Сохранить"
-            $('#inputAddSongs').on('click',
-                '.saveSong',
-                function() {
-                    const container = $(this).closest('.song-input');
-                    const name = container.find('.name').val().trim();
-                    const url = container.find('.url').val().trim();
+            $('#inputAddSongs').on('click', '.saveSong', async function () {
+                const input = document.getElementById('inputFile');
+                const files = input.files;
 
-                    if (!name || !url) {
-                        alert("Пожалуйста, заполните оба поля");
-                        return;
+                if (!files.length) {
+                    alert('Выберите хотя бы один файл');
+                    return;
+                }
+
+                const formData = new FormData();
+                for (const file of files) {
+                    formData.append('audioFiles', file); // Обрати внимание на 'audioFiles'
+                }
+
+                const response = await fetch('/Cloudinary/Audio', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const songs = await response.json();
+
+                    for (const song of songs) {
+                        const trackHtml = `
+                            <div class="track-item">
+                              <div class="track-number">${songIndex + 1}</div>
+                              <div class="track-info">
+                                  <h6 class="mb-0">${song.fileName}</h6>
+                              </div>
+                              <audio controls class="audio-player">
+                                  <source src="${song.url}" type="audio/mpeg">
+                                  Ваш браузер не поддерживает аудио элемент.
+                              </audio>
+                          </div>
+                        `;
+                        $('#songsContainer').append(trackHtml);
+                        songIndex++;
                     }
 
-                    // Добавляем в список треков
-                    songs.push({ name, url });
+                    $(this).closest('.song-input').remove();
+                } else {
+                    alert('Ошибка при загрузке файлов');
+                }
+            });
 
-                    // Обновляем hidden inputs
-                    renderHiddenInputs();
-
-                    // Показываем трек в списке
-                    const trackHtml = `
-                       <div class="track-item">
-                            <div class="track-number">${songIndex + 1}</div>
-                            <div class="track-info">
-                                <h6 class="mb-0">${name}</h6>
-                            </div>
-                            <audio controls class="audio-player">
-                                <source src="${url}" type="audio/mpeg">
-                                Ваш браузер не поддерживает аудио элемент.
-                            </audio>
-                        </div>
-                `;
-                    $('#songsContainer').append(trackHtml);
-
-                    // Удаляем поле ввода
-                    container.remove();
-                    songIndex++;
-                });
 
             // Обновляем hidden inputs для отправки на сервер
             function renderHiddenInputs() {

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.Infrastructure.SQLite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.Repository.EfCore", "Music.Repository.EfCore\Music.Repository.EfCore.csproj", "{0AB11FAF-DD77-4622-BF02-3869324FCCCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.Infrastructure.Cloudinary", "Music.Infrastructure.Cloudinary\Music.Infrastructure.Cloudinary.csproj", "{55AD2AE4-5115-409A-A48C-DD7A7836C4D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0AB11FAF-DD77-4622-BF02-3869324FCCCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AB11FAF-DD77-4622-BF02-3869324FCCCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AB11FAF-DD77-4622-BF02-3869324FCCCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55AD2AE4-5115-409A-A48C-DD7A7836C4D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55AD2AE4-5115-409A-A48C-DD7A7836C4D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55AD2AE4-5115-409A-A48C-DD7A7836C4D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55AD2AE4-5115-409A-A48C-DD7A7836C4D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
