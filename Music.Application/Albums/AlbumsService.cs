@@ -19,7 +19,8 @@ public class AlbumsService : IAlbumsService
     {
         try
         {
-            ThrowIfNull(artist.Name, "Название альбомам не должно быть пустым");
+
+            ThrowIfNull(artist.Name, "Название альбома не должно быть пустым");
             ThrowIfNull(artist.UrlImg, "Обложка альбома не должна быть пустая");
             ThrowIfNull(artist.Songs, "Альбом должен содержать хотя бы 1 песню");
 

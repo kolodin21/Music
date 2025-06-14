@@ -38,14 +38,14 @@
 
         <button type="submit" class="btn btn-primary mb-3">Добавить альбом</button>
     </form>
-</div>
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger mt-3">
-        @TempData["ErrorMessage"]
-    </div>
-}
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mt-3">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</div>
 
         
 @section Scripts
