@@ -1,18 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Music.Application.Albums;
-using Music.Application.Extensions;
+using Music.Application.Entity.Albums;
+using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Album;
-using Music.Application.QueryResult;
 using Music.Domain.Models;
-using Music.Infrastructure.SQLite.Configurations;
-using Music.Infrastructure.SQLite.Extensions;
+using Music.Repository.EfCore.Database;
+using Music.Repository.EfCore.Extensions;
 
-namespace Music.Infrastructure.SQLite.Repositories;
+namespace Music.Repository.EfCore.Repositories;
 
 public class AlbumRepository : IAlbumRepository
 {
-    private readonly MusicDbContext _dbContext;
-    public AlbumRepository(MusicDbContext dbContext)
+    private readonly IMusicDbContext _dbContext;
+    public AlbumRepository(IMusicDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -135,7 +134,7 @@ public class AlbumRepository : IAlbumRepository
             resultAlbum.UrlImg = album.UrlImg;
             resultAlbum.Songs = album.Songs;
 
-            _dbContext.Update(resultAlbum);
+            _dbContext.Albums.Update(resultAlbum);
             await _dbContext.SaveChangesAsync();
             return QueryResult<Album>.Success(resultAlbum);
 

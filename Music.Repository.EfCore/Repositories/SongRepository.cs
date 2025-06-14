@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Music.Application.Songs;
+using Music.Application.Entity.Songs;
 using Music.Domain.Models;
-using Music.Infrastructure.SQLite.Configurations;
+using Music.Repository.EfCore.Database;
 
-namespace Music.Infrastructure.SQLite.Repositories;
+namespace Music.Repository.EfCore.Repositories;
 
 public class SongRepository : ISongRepository
 {
-    private readonly MusicDbContext _dbContext;
-    public SongRepository(MusicDbContext dbContext)
+    private readonly IMusicDbContext _dbContext;
+    public SongRepository(IMusicDbContext dbContext)
     {
         _dbContext = dbContext;
     }

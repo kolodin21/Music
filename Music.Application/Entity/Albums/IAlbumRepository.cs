@@ -1,9 +1,8 @@
-﻿using Music.Application.Extensions;
+﻿using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Album;
-using Music.Application.QueryResult;
 using Music.Domain.Models;
 
-namespace Music.Application.Albums;
+namespace Music.Application.Entity.Albums;
 
 public interface IAlbumRepository
 {

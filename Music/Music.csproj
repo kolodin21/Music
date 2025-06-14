@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Music.Application\Music.Application.csproj" />
     <ProjectReference Include="..\Music.Domain\Music.Domain.csproj" />
     <ProjectReference Include="..\Music.Infrastrucure.SQLite\Music.Infrastructure.SQLite.csproj" />
+    <ProjectReference Include="..\Music.Repository.EfCore\Music.Repository.EfCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Music.Application.Albums;
-using Music.Application.Artists;
-using Music.Application.Songs;
+using Music.Application.Entity.Albums;
+using Music.Application.Entity.Artists;
+using Music.Application.Entity.Songs;
 
 namespace Music.Application;
 
-public static class DependencyInjections
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

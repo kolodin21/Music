@@ -1,4 +1,4 @@
-﻿namespace Music.Application.Validator
+﻿namespace Music.Application.HelperModels
 {
     public class ValidationException : Exception
     {

@@ -1,4 +1,4 @@
-﻿namespace Music.Application.QueryResult;
+﻿namespace Music.Application.HelperModels;
 
 public class QueryResult<T>
 {

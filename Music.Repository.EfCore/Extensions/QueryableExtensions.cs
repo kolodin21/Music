@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Music.Application.Extensions;
+using Music.Application.HelperModels;
+using System.Linq.Expressions;
 
-namespace Music.Infrastructure.SQLite.Extensions
+namespace Music.Repository.EfCore.Extensions
 {
     public static class QueryableExtensions
     {
@@ -53,6 +54,11 @@ namespace Music.Infrastructure.SQLite.Extensions
                 totalCount,
                 pageNumber,
                 pageSize);
+        }
+        public static IQueryable<T> ApplyIf<T>(this IQueryable<T> query, bool condition,
+            Expression<Func<T, bool>> predicate)
+        {
+            return condition ? query.Where(predicate) : query;
         }
     }
 }

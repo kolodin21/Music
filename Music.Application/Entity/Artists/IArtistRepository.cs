@@ -1,8 +1,7 @@
-﻿using Music.Application.Extensions;
+﻿using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Artist;
-using Music.Application.QueryResult;
 
-namespace Music.Application.Artists;
+namespace Music.Application.Entity.Artists;
 
 public interface IArtistRepository
 {

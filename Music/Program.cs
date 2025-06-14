@@ -1,14 +1,16 @@
 using Music.Application;
-using Music.Infrastructure.SQLite.Configurations;
+using Music.Infrastructure.SQLite.Extensions;
+using Music.Repository.EfCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-var connection = builder.Configuration.GetConnectionString("MusicDbConnectionSQLite");
 
+var connection = builder.Configuration.GetConnectionString("MusicDbConnectionSQLite");
 builder.Services.AddDbContextSqLite(connection);
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddRepositoryEfCore();
 builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 app.UseStaticFiles();

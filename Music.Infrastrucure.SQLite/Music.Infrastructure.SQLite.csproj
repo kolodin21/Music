@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Configurations\DependencyInjections.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -24,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Music.Application\Music.Application.csproj" />
+    <ProjectReference Include="..\Music.Repository.EfCore\Music.Repository.EfCore.csproj" />
   </ItemGroup>
 
 </Project>

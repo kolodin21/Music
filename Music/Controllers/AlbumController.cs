@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Music.Application.Albums;
-using Music.Application.Artists;
+using Music.Application.Entity.Albums;
+using Music.Application.Entity.Artists;
 using Music.Application.ModelsDto.Album;
 using Music.ViewModels.Album;
 

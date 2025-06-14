@@ -1,6 +1,6 @@
 ﻿using Music.Domain.Models;
 
-namespace Music.Application.Songs;
+namespace Music.Application.Entity.Songs;
 
 public interface ISongsService
 {

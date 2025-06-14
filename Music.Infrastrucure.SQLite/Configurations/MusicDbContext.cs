@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Music.Domain.Models;
+using Music.Repository.EfCore.Database;
 
 namespace Music.Infrastructure.SQLite.Configurations;
 
-public class MusicDbContext : DbContext
+public class MusicDbContext : DbContext, IMusicDbContext
 {
     public MusicDbContext(DbContextOptions<MusicDbContext> options)
         : base(options)

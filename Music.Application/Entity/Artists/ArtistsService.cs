@@ -1,9 +1,8 @@
-﻿using Music.Application.Extensions;
+﻿using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Artist;
-using Music.Application.QueryResult;
-using static Music.Application.Validator.Validate;
+using static Music.Application.HelperModels.Validate;
 
-namespace Music.Application.Artists
+namespace Music.Application.Entity.Artists
 {
     public class ArtistsService : IArtistsService
     {

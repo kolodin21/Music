@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Music.Application.Artists;
+using Music.Application.Entity.Artists;
 using Music.Application.ModelsDto.Artist;
 using Music.ViewModels.Artist;
 using Music.Views.Shared.Components.SearchPaginationArtist;

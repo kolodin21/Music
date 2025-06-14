@@ -1,4 +1,4 @@
-﻿namespace Music.Application.Extensions
+﻿namespace Music.Application.HelperModels
 {
     /// <summary>
     /// Результат с пагинацией

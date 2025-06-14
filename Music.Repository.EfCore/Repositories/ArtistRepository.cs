@@ -1,18 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Music.Application.Artists;
-using Music.Application.Extensions;
+using Music.Application.Entity.Artists;
+using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Artist;
-using Music.Application.QueryResult;
 using Music.Domain.Models;
-using Music.Infrastructure.SQLite.Configurations;
-using Music.Infrastructure.SQLite.Extensions;
+using Music.Repository.EfCore.Database;
+using Music.Repository.EfCore.Extensions;
 
-namespace Music.Infrastructure.SQLite.Repositories;
+namespace Music.Repository.EfCore.Repositories;
 
 public class ArtistRepository : IArtistRepository
 {
-    private readonly MusicDbContext _dbContext;
-    public ArtistRepository(MusicDbContext dbContext)
+    private readonly IMusicDbContext _dbContext;
+    public ArtistRepository(IMusicDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -115,7 +114,7 @@ public class ArtistRepository : IArtistRepository
             resultArtist.UrlImg = artist.UrlImg;
 
             var result = ArtistDtoFactory.Create(resultArtist);
-            _dbContext.Update(resultArtist);
+            _dbContext.Artists.Update(resultArtist);
             await _dbContext.SaveChangesAsync();
             return QueryResult<ArtistReadDto>.Success(result);
 

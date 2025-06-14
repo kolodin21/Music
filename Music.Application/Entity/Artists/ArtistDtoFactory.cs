@@ -1,7 +1,7 @@
 ﻿using Music.Application.ModelsDto.Artist;
 using Music.Domain.Models;
 
-namespace Music.Application.Artists
+namespace Music.Application.Entity.Artists
 {
     public static class ArtistDtoFactory
     {
