@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Music.Domain.Models;
 
 namespace Music.Repository.EfCore.Database
@@ -10,5 +11,6 @@ namespace Music.Repository.EfCore.Database
         public DbSet<Song> Songs { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

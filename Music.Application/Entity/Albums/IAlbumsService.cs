@@ -6,10 +6,10 @@ namespace Music.Application.Entity.Albums;
 
 public interface IAlbumsService
 {
-    Task<QueryResult<PagedResult<Album>>> GetAll(int pageNumber, int pageSize);
-    Task<QueryResult<Album>> GetById(int id);
+    Task<QueryResult<PagedResult<AlbumReadDto>>> GetAll(int pageNumber, int pageSize);
+    Task<QueryResult<AlbumReadDto>> GetById(int id);
     Task<QueryResult<int>> Create(AlbumCreateDto artist);
     Task<QueryResult<int>> Delete(int id);
     Task<QueryResult<Album>> Update(AlbumReadDto artist);
-    Task<QueryResult<Album>> GetDetailsByIdAsync(int id);
+    Task<QueryResult<AlbumReadDto>> GetDetailsByIdAsync(int id);
 }

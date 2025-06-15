@@ -28,6 +28,9 @@ public class AlbumController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
+        // Пропускаем запросы не к деталям альбома
+        if (Request.Path.StartsWithSegments("/favicon.ico"))
+            return NotFound();
         var album = await _albumsService.GetDetailsByIdAsync(id);
 
         return View(album.Value);

@@ -8,6 +8,7 @@
     <h2 class="mb-4">Добавить альбом для @Model.Artist.Name </h2>
 
     <form asp-controller="Album" asp-action="Create" method="post">
+        <input type="hidden" asp-for="@Model.Album.ArtistId" value="@Model.Artist.Id" />
 
         <div class="mb-3">
             <label asp-for="@Model.Album.Name" class="form-label">Навзвание альбома</label>
@@ -23,6 +24,7 @@
             <label asp-for="@Model.Album.YearOfIssue" class="form-label">Дата релиза</label>
             <input asp-for="@Model.Album.YearOfIssue" class="form-control" placeholder="Введите дату"/>
         </div>
+        
 
         <h3 class="mt-4">Треки</h3>
         <!-- скрываемые поля для треков, которые будут динамически добавляться -->
@@ -56,7 +58,7 @@
     <script>
         $(document).ready(function() {
             let songIndex = 0;
-            const songs = [];
+            let inputSongs = [];
 
             function addSongField() {
                 const songField = `
@@ -88,7 +90,7 @@
 
                 const formData = new FormData();
                 for (const file of files) {
-                    formData.append('audioFiles', file); // Обрати внимание на 'audioFiles'
+                    formData.append('audioFiles', file); 
                 }
 
                 const response = await fetch('/Cloudinary/Audio', {
@@ -98,7 +100,7 @@
 
                 if (response.ok) {
                     const songs = await response.json();
-
+                    inputSongs.push(songs);
                     for (const song of songs) {
                         const trackHtml = `
                             <div class="track-item">
@@ -115,8 +117,8 @@
                         $('#songsContainer').append(trackHtml);
                         songIndex++;
                     }
-
                     $(this).closest('.song-input').remove();
+                    renderHiddenInputs();
                 } else {
                     alert('Ошибка при загрузке файлов');
                 }
@@ -126,14 +128,16 @@
             // Обновляем hidden inputs для отправки на сервер
             function renderHiddenInputs() {
                 $('#hiddenSongsInputs').empty();
-                songs.forEach((song, index) => {
-                    $('#hiddenSongsInputs').append(`
-                        <input type="hidden" name="Album.Songs[${index}].Name" value="${song.name}" />
-                        <input type="hidden" name="Album.Songs[${index}].UrlSong" value="${song.url}" />
+                inputSongs.forEach((songGroup, groupIndex) => {
+                    songGroup.forEach((song, index) => {
+                        const songIndex = groupIndex * songGroup.length + index;
+                        $('#hiddenSongsInputs').append(`
+                        <input type="hidden" name="Album.Songs[${songIndex}].Name" value="${song.fileName}" />
+                        <input type="hidden" name="Album.Songs[${songIndex}].Url" value="${song.url}" />
                     `);
+                    });
                 });
             }
-
             // Инициализация
             addSongField();
         });

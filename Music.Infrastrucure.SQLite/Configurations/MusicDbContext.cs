@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Storage;
 using Music.Domain.Models;
 using Music.Repository.EfCore.Database;
 
@@ -14,6 +15,12 @@ public class MusicDbContext : DbContext, IMusicDbContext
     public DbSet<Album> Albums { get; set; }
     public DbSet<Artist> Artists { get; set; }
     public DbSet<Song> Songs { get; set; }
+
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return await Database.BeginTransactionAsync();
+    }
 }
 
 public class MusicDbContextFactory : IDesignTimeDbContextFactory<MusicDbContext>

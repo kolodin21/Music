@@ -14,16 +14,16 @@ public class AlbumsService : IAlbumsService
         _albumRepository = albumRepository;
     }
 
-    public async Task<QueryResult<int>> Create(AlbumCreateDto artist)
+    public async Task<QueryResult<int>> Create(AlbumCreateDto album)
     {
         try
         {
 
-            ThrowIfNull(artist.Name, "Название альбома не должно быть пустым");
-            ThrowIfNull(artist.UrlImg, "Обложка альбома не должна быть пустая");
-            ThrowIfNull(artist.Songs, "Альбом должен содержать хотя бы 1 песню");
+            ThrowIfNull(album.Name, "Название альбома не должно быть пустым");
+            ThrowIfNull(album.UrlImg, "Обложка альбома не должна быть пустая");
+            ThrowIfNull(album.Songs, "Альбом должен содержать хотя бы 1 песню");
 
-            return await _albumRepository.CreateAsync(artist);
+            return await _albumRepository.CreateAsync(album);
         }
         catch (Exception exp)
         {
@@ -45,7 +45,7 @@ public class AlbumsService : IAlbumsService
         }
     }
 
-    public async Task<QueryResult<PagedResult<Album>>> GetAll(int pageNumber, int pageSize)
+    public async Task<QueryResult<PagedResult<AlbumReadDto>>> GetAll(int pageNumber, int pageSize)
     {
         try
         {
@@ -53,11 +53,11 @@ public class AlbumsService : IAlbumsService
         }
         catch (Exception exp)
         {
-            return QueryResult<PagedResult<Album>>.Failure(new[] { "Ошибка получения всех альбомов" });
+            return QueryResult<PagedResult<AlbumReadDto>>.Failure(new[] { "Ошибка получения всех альбомов" });
         }
     }
 
-    public async Task<QueryResult<Album>> GetById(int id)
+    public async Task<QueryResult<AlbumReadDto>> GetById(int id)
     {
         try
         {
@@ -67,11 +67,11 @@ public class AlbumsService : IAlbumsService
         }
         catch (Exception exp)
         {
-            return QueryResult<Album>.Failure(new[] { exp.Message });
+            return QueryResult<AlbumReadDto>.Failure(new[] { exp.Message });
         }
     }
 
-    public async Task<QueryResult<Album>> GetDetailsByIdAsync(int id)
+    public async Task<QueryResult<AlbumReadDto>> GetDetailsByIdAsync(int id)
     {
         try
         {
@@ -81,7 +81,7 @@ public class AlbumsService : IAlbumsService
         }
         catch (Exception exp)
         {
-            return QueryResult<Album>.Failure(new[] { exp.Message });
+            return QueryResult<AlbumReadDto>.Failure(new[] { exp.Message });
         }
     }
 

@@ -6,5 +6,10 @@ public class Album
     public required string Name { get; set; }
     public required int YearOfIssue { get; set; }
     public required string UrlImg { get; set; }
+
+    // Ссылка на исполнителя 
+    public int ArtistId { get; set; }
+    public Artist? Artist { get; set; }
+
     public required List<Song> Songs { get; set; }
 }
