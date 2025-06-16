@@ -20,19 +20,20 @@
 <div class="container">
     <div class="row">
         <!-- Список треков -->
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <h2 class="mb-4">Песни</h2>
 
             <div class="track-list">
-                @foreach (var song in Model.Songs)
+                @for(var i = 0; i < Model.Songs.Count;i++)
                 {
                     <div class="track-item">
-                        <div class="track-number">1</div>
-                        <div class="track-info">
-                            <h6 class="mb-0">@song.Name</h6>
+                        <div class="track-number">@(i + 1)</div>
+                        <div class="track-info col-6">
+                            <h6 class="mb-0">@Model.Songs[i].Name</h6>
                         </div>
-                        <audio controls class="audio-player">
-                            <source src="@song.UrlSong" type="audio/mpeg">
+                      
+                        <audio controls class="audio-player col-6">
+                            <source src="@Model.Songs[i].UrlSong" type="audio/mpeg">
                             Ваш браузер не поддерживает аудио элемент.
                         </audio>
                     </div>

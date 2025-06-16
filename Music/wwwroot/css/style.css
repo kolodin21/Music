@@ -42,10 +42,10 @@
     display: flex;
     align-items: center;
 }
-
 .track-item:hover {
-    background-color: #f8f9fa;
+    background-color: slategray
 }
+
 
 .track-number {
     font-weight: bold;
@@ -102,4 +102,62 @@
 
 .sidebar a:hover {
     background-color: #495057;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+}
+
+.custom-file-upload:hover {
+    background-color: #45a049;
+}
+
+.custom-file-upload:active {
+    background-color: #3d8b40;
+}
+
+.file-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+}
+
+.file-info {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.file-item {
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
+
+.file-size {
+    color: #6c757d;
+    font-size: 0.8em;
 }

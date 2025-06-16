@@ -49,6 +49,7 @@ public class AlbumsService : IAlbumsService
     {
         try
         {
+
             return await _albumRepository.GetAllAsync(pageNumber, pageSize);
         }
         catch (Exception exp)

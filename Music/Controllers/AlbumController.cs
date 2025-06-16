@@ -20,6 +20,7 @@ public class AlbumController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 2)
     {
+        //TODO Почему то дважды делается запрос
         var albums = await _albumsService.GetAll(pageNumber, pageSize);
 
         return View(albums.Value);
@@ -28,12 +29,13 @@ public class AlbumController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        // Пропускаем запросы не к деталям альбома
-        if (Request.Path.StartsWithSegments("/favicon.ico"))
-            return NotFound();
         var album = await _albumsService.GetDetailsByIdAsync(id);
 
-        return View(album.Value);
+        if (album.IsSuccess)
+            return View(album.Value);
+        TempData["ErrorMessage"] = string.Join(", ", album.Errors);
+        return RedirectToAction(nameof(Index));
+
     }
 
     [HttpPost]
