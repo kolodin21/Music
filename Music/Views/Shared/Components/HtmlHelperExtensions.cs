@@ -11,5 +11,10 @@ namespace Music.Views.Shared.Components
         {
             return htmlHelper.PartialAsync("Components/_ArtistCardsPartial", model).Result;
         }
+
+        public static IHtmlContent ErrorMessage(this IHtmlHelper htmlHelper, string? message)
+        {
+            return htmlHelper.PartialAsync("Components/_ErrorMessage", message).Result;
+        }
     }
 }

@@ -2,5 +2,5 @@
 
 public interface ICloudinaryUploader
 {
-    Task<FileSong> UploadAudioAsync(IFileData audioFile);
+    Task<UploadedFile> UploadFileAsync(IFileData file);
 }

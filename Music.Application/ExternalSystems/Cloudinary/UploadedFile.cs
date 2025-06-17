@@ -1,6 +1,6 @@
 ﻿namespace Music.Application.ExternalSystems.Cloudinary;
 
-public class FileSong
+public class UploadedFile
 {
     public required string FileName { get; set; }
     public required string Url { get; set; }

@@ -13,20 +13,20 @@ namespace Music.ExternalSystems.Cloudinary
         }
 
         [HttpPost]
-        public async Task<IActionResult> Audio(List<IFormFile>? audioFiles)
+        public async Task<IActionResult> LoadArrayFiles(List<IFormFile>? files)
         {
-            if (audioFiles == null || !audioFiles.Any())
+            if (files == null || !files.Any())
                 return BadRequest("Файлы не выбраны");
 
-            var uploadedSongs = new List<FileSong>();
+            var uploadedFiles = new List<UploadedFile>();
 
-            foreach (var file in audioFiles)
+            foreach (var file in files)
             {
                 try
                 {
                     var audio = new FormFileAdapter(file);
-                    var uploadedUrl = await _cloudinaryUploader.UploadAudioAsync(audio);
-                    uploadedSongs.Add(uploadedUrl);
+                    var uploadedUrl = await _cloudinaryUploader.UploadFileAsync(audio);
+                    uploadedFiles.Add(uploadedUrl);
                 }
                 catch (Exception ex)
                 {
@@ -34,7 +34,25 @@ namespace Music.ExternalSystems.Cloudinary
                 }
             }
 
-            return Ok(uploadedSongs);
+            return Ok(uploadedFiles);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoadSingleFile(IFormFile? file)
+        {
+            if (file == null)
+                return BadRequest("Файл не выбран");
+
+            try
+            {
+                var photo = new FormFileAdapter(file);
+                var uploadedUrl = await _cloudinaryUploader.UploadFileAsync(photo);
+                return Ok(uploadedUrl);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка загрузки {file.FileName}: {ex.Message}");
+            }
         }
     }
 }
