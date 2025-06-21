@@ -1,0 +1,21 @@
+﻿@model Music.Views.Shared.SongList
+
+<div class="songsList">
+    <h3 class="mb-4 section-title">@Model.NameList</h3>
+    <div class="track-list">
+        @foreach (var song in Model.Songs)
+        {
+            <div class="track-item">
+                <div class="track-number">•</div>
+                <a class="track-info col-6 clickable-title">
+                    <h6 class="track-info-title mb-0">@song.Name</h6>
+                </a>
+                <audio controls class="audio-player col-4 d-none">
+                    <source src="@song.UrlSong" type="audio/mpeg">
+                    Ваш браузер не поддерживает аудио элемент.
+                </audio>
+            </div>
+        }
+    </div>
+</div>
+

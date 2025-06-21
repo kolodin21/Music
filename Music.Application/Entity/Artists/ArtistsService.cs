@@ -19,12 +19,12 @@ namespace Music.Application.Entity.Artists
             {
                 return await _artistRepository.GetAllAsync(pageNumber, pageSize);
             }
-            catch (Exception e)
+            catch (Exception exp)
             {
-                return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { "Ошибка получения всех артистов" });
+                return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { exp.Message, "Ошибка получения всех артистов" });
             }
         }
-        public async Task<QueryResult<ArtistReadDto>> GetById(int id)
+        public async Task<QueryResult<ArtistReadDetailsDto>> GetById(int id)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Music.Application.Entity.Artists
             }
             catch (Exception exp)
             {
-                return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
+                return QueryResult<ArtistReadDetailsDto>.Failure(new[] { exp.Message });
             }
         }
         public async Task<QueryResult<int>> Create(ArtistCreateUpdateDto artist)

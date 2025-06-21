@@ -1,4 +1,6 @@
-﻿@model Music.Application.ModelsDto.Album.AlbumReadDto
+﻿@using Music.Views.Shared.Components
+@using Music.Views.Shared
+@model Music.Application.ModelsDto.Album.AlbumReadDto
 
 <!-- Шапка альбома -->
 <div class="album-header">
@@ -11,6 +13,15 @@
             </div>
             <div class="col-md-9 mt-4 mt-md-0">
                 <h1>@Model.Name</h1>
+                <p class="card-title d-flex align-items-center flex-wrap gap-3">
+                    <span class="card-title-info m-2">
+                        <i class="fas fa-user-alt"></i>@Model.ArtistName
+                    </span>
+                    <span class="separator">•</span>
+                    <span class="card-title-info">
+                        <i class="fas fa-calendar-alt"></i>@Model.YearOfIssue
+                    </span>
+                </p>
             </div>
         </div>
     </div>
@@ -21,24 +32,11 @@
     <div class="row">
         <!-- Список треков -->
         <div class="col-lg-10">
-            <h2 class="mb-4">Песни</h2>
-
-            <div class="track-list">
-                @for(var i = 0; i < Model.Songs.Count;i++)
-                {
-                    <div class="track-item">
-                        <div class="track-number">@(i + 1)</div>
-                        <div class="track-info col-6">
-                            <h6 class="mb-0">@Model.Songs[i].Name</h6>
-                        </div>
-                      
-                        <audio controls class="audio-player col-6">
-                            <source src="@Model.Songs[i].UrlSong" type="audio/mpeg">
-                            Ваш браузер не поддерживает аудио элемент.
-                        </audio>
-                    </div>
-                }
-            </div>
+            @Html.SongsList(new SongList
+            {
+                Songs = Model.Songs,
+                NameList = "Все песни"
+            })
         </div>
     </div>
 </div>

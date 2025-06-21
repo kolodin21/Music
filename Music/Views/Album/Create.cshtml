@@ -24,7 +24,7 @@
                              alt="Превью изображения">
                     </div>
 
-                    <div class="w-100">
+                    <div class="w-100 mb-2 p-2">
                         <label for="inputImgFile" class="btn btn-outline-primary w-100">
                             <i class="bi bi-upload me-2"></i>
                             Выбрать изображение
@@ -63,10 +63,12 @@
                             <!--Поле для добавления треков-->
                             <div id="inputAddSongs"></div>
 
+                            <div class="progress d-none">
+                                <div class="progress-bar" id="uploadProgress" style="width: 0%"></div>
+                            </div>
                             <button id="addSongButton" class="btn btn-primary mt-3 d-none">
                                 <i class="bi bi-file-earmark-plus"></i>
                             </button>
-
                             <div id="hiddenSongsInputs"></div>
                         </div>
                     </div>
@@ -76,51 +78,22 @@
 
         <button type="submit" class="btn btn-primary mt-3">Добавить альбом</button>
     </form>
-
-
     @Html.ErrorMessage(@TempData["ErrorMessage"] as string)
-
 </div>
 
         
 @section Scripts
 {
-   
+    <script src="/js/Audio/Audio.js"></script>
+    <script src="/js/Cloudinary/Cloudinary.js"></script>
+
     <script>
         $(document).ready(function() {
-            let songIndex = 0;
             let inputSongs = [];
 
             function addSongField() {
-                const songField = `
-                    <div class="song-input mb-3 col-6">
-                      <div class="w-100">
-                        <!-- Стилизованная кнопка-->
-                        <label for="inputFile" class="btn btn-outline-primary w-100 mt-2 songLabel">
-                          <i class="bi bi-upload me-2"></i>
-                          Выбрать песни
-                        </label>
-
-                        <!-- Сам инпут (скрыт) -->
-                        <input type="file"
-                               name="files"
-                               id="inputFile"
-                               class="d-none"
-                               accept="audio/*"
-                               multiple>
-                      </div>
-
-                       <!-- Список выбранных файлов -->
-                        <ul class="file-names mt-2 list-unstyled text-light small"></ul>
-
-
-                      <button type="button" class="btn btn-success saveSong mt-3 d-none">
-                          <i class="bi bi-cloud-upload"></i>
-                    </button>
-                    </div>
-                `;
-                $('#inputAddSongs').append(songField);
-            }
+                $('#inputAddSongs').append(FactoryElement.createSongField);
+                }
 
             // При клике на "Добавить трек"
             $('#addSongButton').on('click',
@@ -151,53 +124,42 @@
             $('#inputAddSongs').on('click', '.saveSong', async function () {
                 const input = document.getElementById('inputFile');
                 const files = input.files;
-
                 const $btn = $(this).closest('.song-input').find('.saveSong');
                 $btn.setLoading(true);
 
                 if (!files.length) {
                     alert('Выберите хотя бы один файл');
+                    $btn.setLoading(false);
                     return;
                 }
 
-                const formData = new FormData();
-                for (const file of files) {
-                    formData.append('files', file); 
-                }
+                try {
+                    // Загружаем файлы с прогрессом
+                    $(".progress").removeClass('d-none');
 
-                const response = await fetch('/Cloudinary/LoadArrayFiles', {
-                    method: 'POST',
-                     
-                    body: formData
-                });
+                    const uploadedSongs = await uploadAllFiles(files);
+                    let index = 1;
+                    // Добавляем треки в DOM
+                    uploadedSongs.forEach(song => {
+                        $('#songsContainer').append(FactoryElement.createTrackElement(index,song));
+                        index++;
+                    });
 
-                if (response.ok) {
-                    const songs = await response.json();
-                    inputSongs.push(songs);
-                    for (const song of songs) {
-                        const trackHtml = `
-                            <div class="track-item">
-                              <div class="track-number text-light">${songIndex + 1}</div>
-                              <div class="track-info col-4">
-                                  <h6 class="mb-0 text-light">${song.fileName}</h6>
-                              </div>
-                              <audio controls class="audio-player col-8">
-                                  <source src="${song.url}" type="audio/mpeg">
-                                  Ваш браузер не поддерживает аудио элемент.
-                              </audio>
-                          </div>
-                        `;
-                        $('#songsContainer').append(trackHtml);
-                        $("#addSongButton").removeClass('d-none');
-                        songIndex++;
-                    }
-                    $(this).closest('.song-input').remove();
+                    // Сохраняем песни и обновляем hidden-инпуты
+                    inputSongs.push(uploadedSongs);
                     renderHiddenInputs();
 
+                    // Очищаем форму
+                    $(this).closest('.song-input').remove();
+                    input.value = ''; // Очищаем input[type="file"]
+                    $("#addSongButton").removeClass('d-none');
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при загрузке файлов: ' + error.message);
+                } finally {
                     $btn.setLoading(false);
-                } else {
-                    $btn.setLoading(false);
-                    alert('Ошибка при загрузке файлов');
+                    $(".progress").addClass('d-none');
                 }
             });
 
@@ -205,14 +167,15 @@
             // Обновляем hidden inputs для отправки на сервер
             function renderHiddenInputs() {
                 $('#hiddenSongsInputs').empty();
-                inputSongs.forEach((songGroup, groupIndex) => {
-                    songGroup.forEach((song, index) => {
-                        const songIndex = groupIndex * songGroup.length + index;
-                        $('#hiddenSongsInputs').append(`
-                        <input type="hidden" name="Album.Songs[${songIndex}].Name" value="${song.fileName}" />
-                        <input type="hidden" name="Album.Songs[${songIndex}].Url" value="${song.url}" />
-                    `);
-                    });
+    
+                // Преобразуем inputSongs в плоский массив
+                const allSongs = inputSongs.flat();
+    
+                allSongs.forEach((song, index) => {
+                    $('#hiddenSongsInputs').append(`
+                    <input type="hidden" name="Album.Songs[${index}].Name" value="${song.fileName}" />
+                    <input type="hidden" name="Album.Songs[${index}].Url" value="${song.url}" />
+                `);
                 });
             }
             // Инициализация
@@ -242,6 +205,5 @@
                 }
             });
         });
-
     </script>
 }

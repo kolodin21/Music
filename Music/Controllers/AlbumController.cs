@@ -2,7 +2,9 @@
 using Music.Application.Entity.Albums;
 using Music.Application.Entity.Artists;
 using Music.Application.ModelsDto.Album;
+using Music.Extensions;
 using Music.ViewModels.Album;
+using Music.Views.Shared.Components.Pagination;
 
 namespace Music.Controllers;
 
@@ -20,10 +22,21 @@ public class AlbumController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 2)
     {
-        //TODO Почему то дважды делается запрос
         var albums = await _albumsService.GetAll(pageNumber, pageSize);
 
-        return View(albums.Value);
+        if (albums.IsSuccess)
+        {
+            var model = new AlbumIndexViewModel
+            {
+                Albums = albums.Value.Items,
+                Pagination = albums.Value.ToPagination(this.GetName(), nameof(Index))
+            };
+
+            return View(model);
+        }
+
+        TempData["ErrorMessage"] = string.Join(", ", albums.Errors);
+        return View(null);
     }
 
     [HttpGet]

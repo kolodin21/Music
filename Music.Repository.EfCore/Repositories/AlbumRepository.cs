@@ -22,12 +22,13 @@ public class AlbumRepository : IAlbumRepository
         {
             var albumsQuery = await _dbContext.Albums
                 .Include(x => x.Songs)
+                .Include(x => x.Artist)
                 .AsNoTracking()
                 .ToPagedResultAsync(pageNumber, pageSize);
 
-            var result = albumsQuery.Select(AlbumDtoFactory.Create);
+            var albums = albumsQuery.Select(AlbumDtoFactory.CreateRead);
 
-            return QueryResult<PagedResult<AlbumReadDto>>.Success(result);
+            return QueryResult<PagedResult<AlbumReadDto>>.Success(albums);
         }
         catch (Exception exp)
         {
@@ -42,9 +43,10 @@ public class AlbumRepository : IAlbumRepository
             var album = await _dbContext.Albums
                                 .AsNoTracking()
                                 .Include(x => x.Songs)
+                                .Include(x => x.Artist)
                                 .FirstAsync(x => x.Id == id);
 
-            var result = AlbumDtoFactory.Create(album);
+            var result = AlbumDtoFactory.CreateRead(album);
 
             return QueryResult<AlbumReadDto>.Success(result);
 
@@ -59,10 +61,10 @@ public class AlbumRepository : IAlbumRepository
     {
         try
         {
-            var resultAlbum = await _dbContext.Albums.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-            return resultAlbum == null ?
+            var album = await _dbContext.Albums.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+            return album == null ?
                 QueryResult<AlbumReadDto>.Failure(new[] { "Такой альбом не существует" })
-                : QueryResult<AlbumReadDto>.Success(AlbumDtoFactory.Create(resultAlbum));
+                : QueryResult<AlbumReadDto>.Success(AlbumDtoFactory.CreateRead(album));
         }
         catch (Exception exp)
         {
@@ -84,7 +86,7 @@ public class AlbumRepository : IAlbumRepository
                 .FirstOrDefaultAsync();
 
             var songErrors = new List<string>();
-
+            //2.Добавление песен
             foreach (var songDto in model.Songs)
             {
                 var existingSong = await _dbContext.Songs
@@ -161,7 +163,7 @@ public class AlbumRepository : IAlbumRepository
                 return QueryResult<Album>.Failure(new[] { "Альбом с таким названием уже существует" });
 
             resultAlbum.Name = album.Name;
-            resultAlbum.YearOfIssue = album.YearOfIssue;
+            //resultAlbum.YearOfIssue = album.YearOfIssue;
             resultAlbum.UrlImg = album.UrlImg;
             //resultAlbum.Songs = album.Songs;
 

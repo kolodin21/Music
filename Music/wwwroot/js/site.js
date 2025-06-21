@@ -12,3 +12,9 @@ $.fn.setLoading = function (isLoading) {
         }
     });
 };
+
+$(document).ready(function () {
+    $('.clickable-title').click(function () {
+        $(this).closest('.track-item').find('.audio-player').removeClass('d-none');
+    });
+});

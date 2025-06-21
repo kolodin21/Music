@@ -20,15 +20,7 @@ public class HomeController : Controller
         var model = new HomeIndexViewModel
         {
             Artists = artists.Value.Items,
-            Pagination = new Pagination
-            {
-                ControllerName = this.GetName(),
-                ActionName = nameof(Index),
-                PageNumber = artists.Value.PageNumber,
-                PageSize = artists.Value.PageSize,
-                TotalCount = artists.Value.TotalCount,
-                TotalPages = artists.Value.TotalPages
-            }
+            Pagination = artists.Value.ToPagination(this.GetName(), nameof(Index))
         };
 
         return View(model);

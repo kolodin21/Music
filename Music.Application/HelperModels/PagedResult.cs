@@ -6,7 +6,7 @@
     /// <typeparam name="T">Тип данных</typeparam>
     public class PagedResult<T>
     {
-        public IReadOnlyCollection<T> Items { get; }
+        public IEnumerable<T> Items { get; }
         public int TotalCount { get; }
         public int PageNumber { get; }
         public int PageSize { get; }
@@ -18,7 +18,7 @@
             int pageNumber,
             int pageSize)
         {
-            Items = items.ToList().AsReadOnly();
+            Items = items;
             TotalCount = totalCount;
             PageNumber = pageNumber;
             PageSize = pageSize;

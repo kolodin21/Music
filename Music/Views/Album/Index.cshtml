@@ -1,22 +1,44 @@
-﻿@using Music.Application.HelperModels
-@model PagedResult<Music.Application.ModelsDto.Album.AlbumReadDto>
+﻿@using Music.Views.Shared.Components
+@model Music.ViewModels.Album.AlbumIndexViewModel
+
+@{
+    ViewData["Title"] = "Все альбомы";
+}
 
 <div class="container py-5">
-    <h1 class="text-center mb-5">Популярные Альбомы</h1>
+    <h1 class="text-center mb-5">Все альбомы</h1>
 
     <div class="row">
-
-        @foreach (var album in Model.Items)
+        @if (Model != null)
         {
-            <div class="col-md-4 col-lg-3">
-                <div class="card album-card">
-                    <img src="@album.UrlImg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">@album.Name</h5>
-                        <a asp-controller="Album" asp-action="Details" asp-route-id="@album.Id">Перейти</a>
-                    </div>
+            @foreach (var album in Model.Albums)
+            {
+                <div class="col-md-4 col-lg-3">
+                    <a asp-controller="Album"
+                       asp-action="Details"
+                       asp-route-id="@album.Id" class="card album-card">
+                        <img src="@album.UrlImg" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <div class="album-info">
+                                <!-- Основная информация -->
+                                <h3 class="card-title">@album.Name</h3>
+                                <p class="card-title d-flex align-items-center flex-wrap gap-3">
+                                    <span class="card-title-info">
+                                        <i class="fas fa-user-alt"></i>@album.ArtistName
+                                    </span>
+                                    <span class="separator">•</span>
+                                    <span class="card-title-info">
+                                        <i class="fas fa-calendar-alt"></i>@album.YearOfIssue
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
+            }
         }
     </div>
+    @Html.ErrorMessage(@TempData["ErrorMessage"] as string)
 </div>
+
+@await Component.InvokeAsync("Pagination", Model.Pagination)

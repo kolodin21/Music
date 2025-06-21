@@ -22,9 +22,8 @@ public class ArtistRepository : IArtistRepository
             var resultArtists = await _dbContext.Artists
                 .AsNoTracking()
                 .ToPagedResultAsync(pageNumber: pageNumber, pageSize: pageSize);
-            // Полный результат с метаданными
 
-            var result = resultArtists.Select(ArtistDtoFactory.Create);
+            var result = resultArtists.Select(ArtistDtoFactory.CreateRead);
 
             return QueryResult<PagedResult<ArtistReadDto>>.Success(result);
         }
@@ -33,21 +32,28 @@ public class ArtistRepository : IArtistRepository
             return QueryResult<PagedResult<ArtistReadDto>>.Failure(new[] { exp.Message });
         }
     }
-    public async Task<QueryResult<ArtistReadDto>> GetByIdAsync(int id)
+
+    public async Task<QueryResult<ArtistReadDetailsDto>> GetByIdAsync(int id)
     {
         try
         {
-            var resultArtist = await _dbContext.Artists.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+            var resultArtist = await _dbContext.Artists
+                .Include(x => x.Albums)
+                .ThenInclude(s => s.Songs)
+                .Include(x => x.Singles)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == id);
+
             if (resultArtist == null)
-                QueryResult<ArtistReadDto>.Failure(new[] { "Такой артист не существует" });
+                QueryResult<ArtistReadDetailsDto>.Failure(new[] { "Такой артист не существует" });
 
-            var result = ArtistDtoFactory.Create(resultArtist);
+            var result = ArtistDtoFactory.CreateReadDetails(resultArtist!);
 
-            return QueryResult<ArtistReadDto>.Success(result);
+            return QueryResult<ArtistReadDetailsDto>.Success(result);
         }
         catch (Exception exp)
         {
-            return QueryResult<ArtistReadDto>.Failure(new[] { exp.Message });
+            return QueryResult<ArtistReadDetailsDto>.Failure(new[] { exp.Message });
         }
     }
     public async Task<QueryResult<int>> CreateAsync(ArtistCreateUpdateDto artist)
@@ -113,7 +119,7 @@ public class ArtistRepository : IArtistRepository
             resultArtist.Name = artist.Name;
             resultArtist.UrlImg = artist.UrlImg;
 
-            var result = ArtistDtoFactory.Create(resultArtist);
+            var result = ArtistDtoFactory.CreateRead(resultArtist);
             _dbContext.Artists.Update(resultArtist);
             await _dbContext.SaveChangesAsync();
             return QueryResult<ArtistReadDto>.Success(result);
@@ -133,7 +139,7 @@ public class ArtistRepository : IArtistRepository
                 .ApplyIf(!string.IsNullOrEmpty(name), x => x.Name.StartsWith(name))
                 .ToPagedResultAsync(pageNumber, pageSize);
 
-            var result = resultArtists.Select(ArtistDtoFactory.Create);
+            var result = resultArtists.Select(ArtistDtoFactory.CreateRead);
 
             return QueryResult<PagedResult<ArtistReadDto>>.Success(result);
         }
