@@ -1,13 +1,32 @@
-﻿.album-card {
+﻿
+/*Альбомы */
+.album-card {
     transition: transform 0.3s;
     margin-bottom: 20px;
     text-decoration: none;
 }
-
 .album-card:hover {
     transform: translateY(-5px);
 }
+.album-cover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0);
+    transition: transform 0.3s;
+}
 
+.album-cover:hover {
+    transform: scale(1.03);
+}
+
+.album-header {
+    background: linear-gradient(rgba(40, 40, 80, 0.6), rgba(20, 20, 50, 0.6)), url('https://via.placeholder.com/1920x500?text=Album+Background');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+}
+
+/*Картинки */
 .card-img-top {
     height: 200px;
     object-fit: cover;
@@ -24,38 +43,30 @@
     color: white;
     line-height: 1;
 }
-.album-header {
-    background: linear-gradient(rgba(40, 40, 80, 0.6), rgba(20, 20, 50, 0.6)), url('https://via.placeholder.com/1920x500?text=Album+Background');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    padding: 5rem 0;
-    margin-bottom: 3rem;
-}
 
-.album-cover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0);
-    transition: transform 0.3s;
-}
-
-.album-cover:hover {
-    transform: scale(1.03);
-}
-
+/*Треки */
 .track-list {
     margin-top: 2rem;
 }
 
 .track-item {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    transition: background 0.3s;
 }
-.track-item:hover {
-    background-color: slategray
+.track-item.playing {
+    background: #555;
+    border-left: 3px solid #1db954;
+}
+.track-info {
+    flex-grow: 1; 
+    font-size: 20px;
 }
 
+.track-item:hover {
+    background-color: slategray;
+}
 
 .track-number {
     font-weight: bold;
@@ -64,10 +75,6 @@
     text-align: center;
 }
 
-.track-info {
-    flex-grow: 1;
-    font-size: 20px;
-}
 .track-info-title {
     font-size: 20px;
 }
@@ -80,10 +87,89 @@
     flex-grow: 1;
     max-width: 400px;
 }
-
-.album-info {
+/*АудиоПлеер */
+.player-controls-container {
+    width: 100%;
+    position: fixed; /* или absolute, в зависимости от вашей вёрстки */
+    bottom: 20px;
+    left: 0;
+    display: flex;
+    justify-content: center;
 }
 
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 12px 25px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#playBtn, #pauseBtn {
+    background: #1db954;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#playBtn:hover, #pauseBtn:hover {
+    transform: scale(1.1);
+}
+
+#nowPlaying {
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    min-width: 150px;
+    text-align: center;
+}
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 4px;
+    cursor: pointer;
+}
+
+#currentTime, #duration {
+    font-size: 12px;
+    color: white;
+    min-width: 40px;
+    text-align: center;
+}
+
+
+/*Пагинация */
 .pagination-fixed-bottom {
     position: fixed;
     bottom: 0;
@@ -94,6 +180,7 @@
     box-shadow: 0 2px 30px rgba(0,0,0,0.3);
 }
 
+/*Сайдбар */
 .sidebar {
     height: 100vh;
     width: 250px;
@@ -116,6 +203,8 @@
     background-color: #495057;
 }
 
+
+/*Выбор файлов */
 .custom-file-upload {
     display: inline-block;
     padding: 12px 24px;
@@ -174,6 +263,7 @@
     font-size: 0.8em;
 }
 
+/*Кнопка загрузки */
 .button-loading {
     position: relative;
     pointer-events: none;
@@ -210,13 +300,3 @@
     }
 }
 
-.audio-player {
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-
-.audio-player.show {
-    max-height: 100px; /* Подберите подходящее значение */
-}
