@@ -87,6 +87,27 @@
     flex-grow: 1;
     max-width: 400px;
 }
+.btn-download, .btn-favorite {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.btn-download:hover {
+    color: #4285f4;
+}
+
+.btn-favorite:hover {
+    color: #ff3a30;
+}
+
+.btn-favorite.active {
+    color: #ff3a30;
+}
 /*АудиоПлеер */
 .player-controls-container {
     width: 100%;
