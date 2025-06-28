@@ -114,7 +114,7 @@ public class AlbumRepository : IAlbumRepository
                 }).ToList()
             };
 
-            _dbContext.Albums.Add(newAlbum);
+            await _dbContext.Albums.AddAsync(newAlbum);
             await _dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 

@@ -2,17 +2,27 @@
 
 class FactoryElement {
 
-    static createTrackElement(index, song) {
-        return `
-            <div class="track-item" data-track-id="${index}">
-                <div class="track-number text-light">${index}</div>
-                <div class="track-info col-4">
-                    <h6 class="mb-0 text-light">${song.fileName}</h6>
+    static createTrackElement(song) {
+        return `       
+             <div class="track-item d-flex align-items-center justify-content-between" data-src="${song.url}">
+                <div class="d-flex align-items-center flex-grow-1">
+                    <div class="track-number">•</div>
+                    <div class="track-info ms-3">
+                        <h6 class="track-info-title mb-0">${song.fileName}</h6>
+                    </div>
                 </div>
-                <audio controls class="audio-player col-8">
-                    <source src="${song.url}" type="audio/mpeg">
-                    Ваш браузер не поддерживает аудио элемент.
-                </audio>
+    
+                <div class="track-actions d-flex align-items-center">
+                    <!-- Кнопка скачивания -->
+                    <a href="/Cloudinary/Song?url=${song.url}" class="btn-download me-2" title="Скачать">
+                        <i class="bi bi-download"></i>
+                    </a>
+        
+                    <!-- Кнопка добавления в избранное -->
+                    <button class="btn-favorite" title="Добавить в избранное" data-song-id="${song.id}">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                </div>
             </div>
         `;
     }

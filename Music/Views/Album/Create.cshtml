@@ -84,7 +84,6 @@
         
 @section Scripts
 {
-    <script src="/js/Audio/Audio.js"></script>
     <script src="/js/Cloudinary/Cloudinary.js"></script>
 
     <script>
@@ -138,11 +137,9 @@
                     $(".progress").removeClass('d-none');
 
                     const uploadedSongs = await uploadAllFiles(files);
-                    let index = 1;
                     // Добавляем треки в DOM
                     uploadedSongs.forEach(song => {
-                        $('#songsContainer').append(FactoryElement.createTrackElement(index,song));
-                        index++;
+                        $('#songsContainer').append(FactoryElement.createTrackElement(song));
                     });
 
                     // Сохраняем песни и обновляем hidden-инпуты
@@ -151,7 +148,7 @@
 
                     // Очищаем форму
                     $(this).closest('.song-input').remove();
-                    input.value = ''; // Очищаем input[type="file"]
+                    input.value = ''; 
                     $("#addSongButton").removeClass('d-none');
 
                 } catch (error) {
@@ -167,8 +164,7 @@
             // Обновляем hidden inputs для отправки на сервер
             function renderHiddenInputs() {
                 $('#hiddenSongsInputs').empty();
-    
-                // Преобразуем inputSongs в плоский массив
+
                 const allSongs = inputSongs.flat();
     
                 allSongs.forEach((song, index) => {
@@ -178,7 +174,6 @@
                 `);
                 });
             }
-            // Инициализация
             addSongField();
         });
 

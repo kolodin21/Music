@@ -33,7 +33,6 @@ async function uploadAllFiles(files) {
             results.push(...chunkResult);
             uploadedCount += chunk.length;
 
-            // Обновляем прогресс 
             updateProgress((uploadedCount / files.length) * 100);
 
         } catch (error) {
@@ -46,5 +45,11 @@ async function uploadAllFiles(files) {
 }
 
 function updateProgress(percent) {
-    document.getElementById('uploadProgress').style.width = `${percent}%`;
+    const progressContainer = document.querySelector('.progress');
+    const progressBar = document.getElementById('uploadProgress');
+
+    if (progressContainer && progressBar) {
+        progressContainer.classList.remove('d-none'); 
+        progressBar.style.width = `${percent}%`;
+    }
 }
