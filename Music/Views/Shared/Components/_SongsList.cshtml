@@ -1,0 +1,31 @@
+﻿@model Music.Views.Shared.SongList
+
+<div class="songsList">
+    <h3 class="mb-4">@Model.NameList</h3>
+    <div class="track-list">
+        @foreach (var song in Model.Songs)
+        {
+            <div class="track-item d-flex align-items-center justify-content-between" data-src="@song.UrlSong">
+                <div class="d-flex align-items-center flex-grow-1">
+                    <div class="track-number">•</div>
+                    <div class="track-info ms-3">
+                        <h6 class="track-info-title mb-0">@song.Name</h6>
+                    </div>
+                </div>
+    
+                <div class="track-actions d-flex align-items-center">
+                    <!-- Кнопка скачивания -->
+                    <a href="/Cloudinary/Song?url=@song.UrlSong" class="btn-download me-2" title="Скачать">
+                        <i class="bi bi-download"></i>
+                    </a>
+        
+                    <!-- Кнопка добавления в избранное -->
+                    <button class="btn-favorite" title="Добавить в избранное" data-song-id="@song.Id">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

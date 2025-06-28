@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Music.Application.Artists;
+using Music.Application.Entity.Artists;
 using Music.Extensions;
 using Music.ViewModels.Home;
 using Music.Views.Shared.Components.Pagination;
@@ -20,15 +20,7 @@ public class HomeController : Controller
         var model = new HomeIndexViewModel
         {
             Artists = artists.Value.Items,
-            Pagination = new Pagination
-            {
-                ControllerName = this.GetName(),
-                ActionName = nameof(Index),
-                PageNumber = artists.Value.PageNumber,
-                PageSize = artists.Value.PageSize,
-                TotalCount = artists.Value.TotalCount,
-                TotalPages = artists.Value.TotalPages
-            }
+            Pagination = artists.Value.ToPagination(this.GetName(), nameof(Index))
         };
 
         return View(model);

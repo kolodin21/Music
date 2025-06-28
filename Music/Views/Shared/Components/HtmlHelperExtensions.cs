@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Music.Application.Extensions;
+using Music.Application.HelperModels;
 using Music.Application.ModelsDto.Artist;
 
 namespace Music.Views.Shared.Components
@@ -10,6 +10,16 @@ namespace Music.Views.Shared.Components
         public static IHtmlContent ArtistCards(this IHtmlHelper htmlHelper, PagedResult<ArtistReadDto> model)
         {
             return htmlHelper.PartialAsync("Components/_ArtistCardsPartial", model).Result;
+        }
+
+        public static IHtmlContent ErrorMessage(this IHtmlHelper htmlHelper, string? message)
+        {
+            return htmlHelper.PartialAsync("Components/_ErrorMessage", message).Result;
+        }
+
+        public static IHtmlContent SongsList(this IHtmlHelper htmlHelper, SongList model)
+        {
+            return htmlHelper.PartialAsync("Components/_SongsList", model).Result;
         }
     }
 }

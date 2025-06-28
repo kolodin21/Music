@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -16,7 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Music.Application\Music.Application.csproj" />
     <ProjectReference Include="..\Music.Domain\Music.Domain.csproj" />
+    <ProjectReference Include="..\Music.Infrastructure.Cloudinary\Music.Infrastructure.Cloudinary.csproj" />
     <ProjectReference Include="..\Music.Infrastrucure.SQLite\Music.Infrastructure.SQLite.csproj" />
+    <ProjectReference Include="..\Music.Repository.EfCore\Music.Repository.EfCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,67 +1,145 @@
-﻿@model Music.Application.ModelsDto.Artist.ArtistReadDto
+﻿@using Music.Views.Shared.Components
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Music.Views.Shared
+@model Music.ViewModels.Artist.ArtistDetailsViewModel
 
 @{
     ViewData["Title"] = "Детали исполнителя";
 }
 
-<div class="container mt-5">
-    <h2>Информация об исполнителе</h2>
-    <div class="row">
 
-        <div class="card mt-4 col-md-9" style="height: 300px;">
-            <div class="row g-0 h-100">
-                <div class="col-md-4 h-100">
-                    <img src="@Model.UrlImg"
-                         class="img-fluid rounded-start h-100 w-100"
-                         style="object-fit: contain;"
-                         alt="@Model.Name">
+<div class="container mt-5">
+
+    <div class="main-info-atrist">
+        <h2>Информация об исполнителе</h2>
+        <div class="row">
+
+            <div class="card mt-4 col-md-7" style="height: 300px;">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4 h-100">
+                        <img src="@Model.Artist.UrlImg"
+                             class="img-fluid rounded-start h-100 w-100"
+                             style="object-fit: contain;"
+                             alt="@Model.Artist.Name">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body h-100">
+                            <h5 class="card-title">@Model.Artist.Name</h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <div class="card-body h-100">
-                        <h5 class="card-title">@Model.Name</h5>
+            </div>
+
+            <div class="col-md-5 col-lg-4 col-xl-3 mt-4 d-flex justify-content-center">
+                <div class="d-flex flex-column gap-2 card-details-artist-menu">
+                    <!-- Добавление альбома -->
+                    <a asp-controller="Album"
+                       asp-action="Create"
+                       asp-route-id="@Model.Artist.Id"
+                       class="btn btn-secondary">
+                        <i class="fas fa-plus-circle me-2"></i>Добавить альбом
+                    </a>
+
+                    <!-- Добавление песни -->
+                    <a class="btn btn-secondary" id="addSongBtn">
+                        <i class="fas fa-music me-2"></i>Добавить песню
+                    </a>
+
+                    <!-- Редактирование артиста -->
+                    <a asp-controller="Artist"
+                       asp-action="Update"
+                       asp-route-id="@Model.Artist.Id"
+                       class="btn btn-secondary">
+                        <i class="fas fa-edit me-2"></i>Редактировать артиста
+                    </a>
+
+                    <!-- Назад -->
+                    <a asp-controller="Artist"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Назад к списку
+                    </a>
+
+                    <!-- Удаление -->
+                    <form asp-controller="Artist"
+                          asp-action="Delete"
+                          asp-route-id="@Model.Artist.Id"
+                          method="post"
+                          class="mt-2">
+                        <button type="submit"
+                                class="btn btn-danger w-100"
+                                onclick="return confirm('Вы уверены, что хотите удалить артиста? Это действие нельзя отменить.')">
+                            <i class="fas fa-trash-alt me-2"></i>Удалить артиста
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card-details-artist">
+        <div class="container-fluid card-details-artist mt-4">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="section-container">
+                        <h3 class="section-title">Альбомы</h3>
+                        <div class="d-flex flex-column gap-3">
+                            @foreach (var album in Model.Artist.Albums)
+                            {
+                                <a asp-controller="Album"
+                                   asp-action="Details"
+                                   asp-route-id="@album.Id" class="card album-card">
+                                    <div class="card-body">
+                                        <div class="album-info">
+                                            <!-- Основная информация -->
+                                            <h3 class="card-title">@album.Name</h3>
+                                            <p class="card-title d-flex align-items-center flex-wrap gap-3">
+                                                <span class="card-title-info">
+                                                    <i class="fas fa-user-alt"></i>@album.ArtistName
+                                                </span>
+                                                <span class="separator">•</span>
+                                                <span class="card-title-info">
+                                                    <i class="fas fa-calendar-alt"></i>@album.YearOfIssue
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="">
+                        <div class="d-flex flex-column gap-3">
+                            <!-- Контент синглов -->
+                            @Html.SongsList(new SongList
+                            {
+                                Songs = Model.Artist.Songs,
+                                NameList = "Синглы"
+                            })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+                    <div class="section-container">
+                        <div class="d-flex flex-column gap-3">
+                            @Html.SongsList(new SongList
+                            {
+                                Songs = Model.Artist.Songs,
+                                NameList = "Лучшие песни"
+                            })
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex flex-column col-md-3 mt-3">
-
-            <a asp-controller="Album"
-               asp-action="Create"
-               asp-route-id="@Model.Id"
-               class="btn btn-secondary mt-2">Добавить альбом</a>
-
-            <a class="btn btn-secondary mt-2">Добавить песню</a>
-
-            <a asp-action="Update"
-               asp-controller="Artist"
-               asp-route-id="@Model.Id"
-               class="btn btn-secondary mt-2">Редактировать карточку артиста</a>
-
-            <a asp-controller="Artist"
-               asp-action="Index"
-               class="btn btn-secondary mt-2">Назад</a>
-        </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h3>Альбомы</h3>
-            <div class="d-flex flex-column">
-
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h3>Лучшие песни</h3>
-            <div class="d-flex flex-column">
-
-            </div>
-        </div>
-    </div>
+    @Html.ErrorMessage(@TempData["ErrorMessage"] as string)
 </div>
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger mt-3">
-        @TempData["ErrorMessage"]
-    </div>
-}

@@ -1,34 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Music.Application.Extensions.PagedResult<Music.Application.ModelsDto.Artist.ArtistReadDto>
+@using Music.Application.HelperModels
+@model PagedResult<Music.Application.ModelsDto.Artist.ArtistReadDto>
 
 <!-- Блок с карточками артистов -->
-<div class="row mt-5">
+
+<div class="artist-card row mt-5">
     @foreach (var artist in Model.Items)
     {
-        <div class="col-md-4 col-lg-3 mb-4">
-            <div class="card album-card h-100">
-                <img src="@artist.UrlImg" class="card-img-top" alt="@artist.Name">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">@artist.Name</h5>
-                    <div class="mt-auto d-flex justify-content-between">
-                        <a asp-controller="Artist"
-                           asp-action="Details"
-                           asp-route-id="@artist.Id"
-                           class="btn btn-primary">Перейти</a>
-                        <form asp-controller="Artist"
-                              asp-action="Delete"
-                              asp-route-id="@artist.Id"
-                              method="post">
-                            <button type="submit"
-                                    class="btn btn-danger"
-                                    onclick="return confirm('Удалить артиста?');">
-                                Удалить
-                            </button>
-                        </form>
-                    </div>
+    <div class="col-md-4 col-lg-3 mb-4">
+        <a asp-controller="Artist"
+            asp-action="Details"
+            asp-route-id="@artist.Id"
+            class="card album-card h-100">
+            <img src="@artist.UrlImg" class="card-img-top" alt="@artist.Name">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">@artist.Name</h5>
+               
                 </div>
-            </div>
-        </div>
+        </a>
+    </div>
     }
 </div>
 

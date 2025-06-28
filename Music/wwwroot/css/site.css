@@ -60,6 +60,7 @@ main::before {
 main > .container {
     position: relative;
     z-index: 1;
+    max-width: 2000px;
 }
 
 @keyframes pulse {

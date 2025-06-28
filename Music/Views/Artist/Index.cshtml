@@ -1,5 +1,6 @@
 ﻿@using Music.ViewModels.Artist
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Music.Views.Shared.Components
 @model ArtistIndexViewModel
 
 @{
@@ -25,16 +26,9 @@
         <div id="artist-content">
             @await Component.InvokeAsync("SearchPaginationArtist", Model.Artist)
         </div>
-
     </div>
+    @Html.ErrorMessage(@TempData["ErrorMessage"] as string)
 </div>
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger mt-3">
-        @TempData["ErrorMessage"]
-    </div>
-}
 
 @section Scripts {
     <script>

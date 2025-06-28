@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Music.Application.Artists;
+using Music.Application.Entity.Artists;
 using Music.Application.ModelsDto.Artist;
 using Music.ViewModels.Artist;
 using Music.Views.Shared.Components.SearchPaginationArtist;
@@ -21,7 +21,14 @@ public class ArtistController : Controller
         var artist = await _artistsService.GetById(id);
 
         if (artist.IsSuccess)
-            return View(artist.Value);
+        {
+            var model = new ArtistDetailsViewModel
+            {
+                Artist = artist.Value
+            };
+            return View(model);
+        }
+
         TempData["ErrorMessage"] = string.Join(", ", artist.Errors);
         return RedirectToAction(nameof(Index));
     }
@@ -31,7 +38,9 @@ public class ArtistController : Controller
     {
         var resultId = await _artistsService.Delete(id);
         if (resultId.IsSuccess)
+        {
             return RedirectToAction("Index");
+        }
         TempData["ErrorMessage"] = string.Join(", ", resultId.Errors);
         return RedirectToAction(nameof(Index));
     }
@@ -42,7 +51,9 @@ public class ArtistController : Controller
         var resultId = await _artistsService.Create(artist);
 
         if (resultId.IsSuccess)
+        {
             return RedirectToAction(nameof(Index));
+        }
 
         TempData["ErrorMessage"] = string.Join(", ", resultId.Errors);
         return RedirectToAction(nameof(Create));

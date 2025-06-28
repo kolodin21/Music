@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Music.Application.Albums;
-using Music.Application.Artists;
+using Music.Application.Entity.Albums;
+using Music.Application.Entity.Artists;
 using Music.Application.ModelsDto.Album;
+using Music.Extensions;
 using Music.ViewModels.Album;
+using Music.Views.Shared.Components.Pagination;
 
 namespace Music.Controllers;
 
@@ -22,7 +24,19 @@ public class AlbumController : Controller
     {
         var albums = await _albumsService.GetAll(pageNumber, pageSize);
 
-        return View(albums.Value);
+        if (albums.IsSuccess)
+        {
+            var model = new AlbumIndexViewModel
+            {
+                Albums = albums.Value.Items,
+                Pagination = albums.Value.ToPagination(this.GetName(), nameof(Index))
+            };
+
+            return View(model);
+        }
+
+        TempData["ErrorMessage"] = string.Join(", ", albums.Errors);
+        return View(null);
     }
 
     [HttpGet]
@@ -30,7 +44,11 @@ public class AlbumController : Controller
     {
         var album = await _albumsService.GetDetailsByIdAsync(id);
 
-        return View(album.Value);
+        if (album.IsSuccess)
+            return View(album.Value);
+        TempData["ErrorMessage"] = string.Join(", ", album.Errors);
+        return RedirectToAction(nameof(Index));
+
     }
 
     [HttpPost]

@@ -1,4 +1,5 @@
-﻿@model Music.ViewModels.Album.AlbumCreateViewModel
+﻿@using Music.Views.Shared.Components
+@model Music.ViewModels.Album.AlbumCreateViewModel
 
 @{
     ViewData["Title"] = "Добавление альбома";
@@ -6,126 +7,198 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">Добавить альбом для @Model.Artist.Name </h2>
-
+    
+    
     <form asp-controller="Album" asp-action="Create" method="post">
+        <input type="hidden" asp-for="@Model.Album.ArtistId" value="@Model.Artist.Id" />
+        <div class="card d-flex mt-4 col-md-12">
+            <div class="row g-0 h-100">
 
-        <div class="mb-3">
-            <label asp-for="@Model.Album.Name" class="form-label">Навзвание альбома</label>
-            <input asp-for="@Model.Album.Name" class="form-control" placeholder="Введите название"/>
+                <div class="col-md-4 d-flex flex-column align-items-center gap-3">
+
+                    <div class="ratio ratio-1x1 w-100 bg-light rounded">
+                        <img id="previewImage"
+                             src="/img/notImage.jpg"
+                             class="img-fluid rounded p-2"
+                             style="object-fit: contain;"
+                             alt="Превью изображения">
+                    </div>
+
+                    <div class="w-100 mb-2 p-2">
+                        <label for="inputImgFile" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-upload me-2"></i>
+                            Выбрать изображение
+                        </label>
+                        <input type="file" name="file" id="inputImgFile" accept="image/*" class="d-none">
+                    </div>
+
+                    <input type="hidden" asp-for="@Model.Album.UrlImg" id="imgUrlHidden" />
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card-body h-100">
+
+                        <div class="mb-3 col-6">
+                            <label asp-for="@Model.Album.Name" class="form-label text-light">Навзвание альбома</label>
+                            <input asp-for="@Model.Album.Name" class="form-control" placeholder="Введите название"/>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label asp-for="@Model.Album.YearOfIssue" class="form-label text-light">Дата релиза</label>
+                            <input asp-for="@Model.Album.YearOfIssue" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control"/>
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label asp-for="@Model.Album.UrlImg" class="form-label d-none">URL карточки альбома</label>
+                            <input asp-for="@Model.Album.UrlImg" class="form-control d-none" placeholder="https://example.com/image.jpg"/>
+                        </div>
+
+                        <!-- Контейнер для динамически добавляемых треков -->
+                        <div id="Songs" class="col-lg-12">
+                            <h4 class="mb-4 text-light">Песни</h4>
+                            <div class="track-list">
+                                <div id="songsContainer"></div>
+                            </div>
+
+                            <!--Поле для добавления треков-->
+                            <div id="inputAddSongs"></div>
+
+                            <div class="progress d-none">
+                                <div class="progress-bar" id="uploadProgress" style="width: 0%"></div>
+                            </div>
+                            <button id="addSongButton" class="btn btn-primary mt-3 d-none">
+                                <i class="bi bi-file-earmark-plus"></i>
+                            </button>
+                            <div id="hiddenSongsInputs"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="@Model.Album.UrlImg" class="form-label">URL карточки альбома</label>
-            <input asp-for="@Model.Album.UrlImg" class="form-control" placeholder="https://example.com/image.jpg"/>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="@Model.Album.YearOfIssue" class="form-label">Дата релиза</label>
-            <input asp-for="@Model.Album.YearOfIssue" class="form-control" placeholder="Введите дату"/>
-        </div>
-
-        <h3 class="mt-4">Треки</h3>
-        <!-- скрываемые поля для треков, которые будут динамически добавляться -->
-        <div id="hiddenSongsInputs"></div>
-
-        <!-- Контейнер для динамически добавляемых треков -->
-        <div id="songsContainer"></div>
-
-        <!--Поле для добавления треков-->
-        <div id="inputAddSongs"></div>
-
-        <button id="addSongButton" class="btn btn-success mb-3">Добавить трек</button>
-
-        <button type="submit" class="btn btn-primary mb-3">Добавить альбом</button>
+        <button type="submit" class="btn btn-primary mt-3">Добавить альбом</button>
     </form>
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger mt-3">
-            @TempData["ErrorMessage"]
-        </div>
-    }
+    @Html.ErrorMessage(@TempData["ErrorMessage"] as string)
 </div>
 
         
 @section Scripts
 {
+    <script src="/js/Cloudinary/Cloudinary.js"></script>
+
     <script>
         $(document).ready(function() {
-            let songIndex = 0;
-            const songs = [];
+            let inputSongs = [];
 
-            // Добавить новое поле для ввода трека
             function addSongField() {
-                const songField = `
-                    <div class="song-input mb-3">
-                        <input type="text" class="form-control name" placeholder="Название трека" />
-                        <input type="text" class="form-control url mt-1" placeholder="https://example.com/song.mp3" />
-                        <button type="button" class="btn btn-success mt-2 saveSong">Сохранить</button>
-                    </div>
-                `;
-                $('#inputAddSongs').append(songField);
-            }
+                $('#inputAddSongs').append(FactoryElement.createSongField);
+                }
 
             // При клике на "Добавить трек"
             $('#addSongButton').on('click',
                 function(e) {
                     e.preventDefault();
+                    $(this).addClass('d-none');
                     addSongField();
                 });
 
-            // При клике на "Сохранить"
-            $('#inputAddSongs').on('click',
-                '.saveSong',
-                function() {
-                    const container = $(this).closest('.song-input');
-                    const name = container.find('.name').val().trim();
-                    const url = container.find('.url').val().trim();
+            $('#inputAddSongs').on('change', 'input[type="file"]', function () {
+                const container = $(this).closest('.song-input');
+                const fileList = container.find('.file-names');
+                const files = this.files;
 
-                    if (!name || !url) {
-                        alert("Пожалуйста, заполните оба поля");
-                        return;
+                fileList.empty(); // Очистить список перед добавлением новых
+
+                if (files.length > 0) {
+                    container.find('.saveSong').removeClass('d-none');
+                    container.find('.songLabel').addClass('d-none');
+
+                    for (const file of files) {
+                        fileList.append(`<li>${file.name}</li>`);
                     }
+                }
+            });
 
-                    // Добавляем в список треков
-                    songs.push({ name, url });
+            // При клике на "Сохранить"
+            $('#inputAddSongs').on('click', '.saveSong', async function () {
+                const input = document.getElementById('inputFile');
+                const files = input.files;
+                const $btn = $(this).closest('.song-input').find('.saveSong');
+                $btn.setLoading(true);
 
-                    // Обновляем hidden inputs
+                if (!files.length) {
+                    alert('Выберите хотя бы один файл');
+                    $btn.setLoading(false);
+                    return;
+                }
+
+                try {
+                    // Загружаем файлы с прогрессом
+                    $(".progress").removeClass('d-none');
+
+                    const uploadedSongs = await uploadAllFiles(files);
+                    // Добавляем треки в DOM
+                    uploadedSongs.forEach(song => {
+                        $('#songsContainer').append(FactoryElement.createTrackElement(song));
+                    });
+
+                    // Сохраняем песни и обновляем hidden-инпуты
+                    inputSongs.push(uploadedSongs);
                     renderHiddenInputs();
 
-                    // Показываем трек в списке
-                    const trackHtml = `
-                       <div class="track-item">
-                            <div class="track-number">${songIndex + 1}</div>
-                            <div class="track-info">
-                                <h6 class="mb-0">${name}</h6>
-                            </div>
-                            <audio controls class="audio-player">
-                                <source src="${url}" type="audio/mpeg">
-                                Ваш браузер не поддерживает аудио элемент.
-                            </audio>
-                        </div>
-                `;
-                    $('#songsContainer').append(trackHtml);
+                    // Очищаем форму
+                    $(this).closest('.song-input').remove();
+                    input.value = ''; 
+                    $("#addSongButton").removeClass('d-none');
 
-                    // Удаляем поле ввода
-                    container.remove();
-                    songIndex++;
-                });
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при загрузке файлов: ' + error.message);
+                } finally {
+                    $btn.setLoading(false);
+                    $(".progress").addClass('d-none');
+                }
+            });
+
 
             // Обновляем hidden inputs для отправки на сервер
             function renderHiddenInputs() {
                 $('#hiddenSongsInputs').empty();
-                songs.forEach((song, index) => {
+
+                const allSongs = inputSongs.flat();
+    
+                allSongs.forEach((song, index) => {
                     $('#hiddenSongsInputs').append(`
-                        <input type="hidden" name="Album.Songs[${index}].Name" value="${song.name}" />
-                        <input type="hidden" name="Album.Songs[${index}].UrlSong" value="${song.url}" />
-                    `);
+                    <input type="hidden" name="Album.Songs[${index}].Name" value="${song.fileName}" />
+                    <input type="hidden" name="Album.Songs[${index}].Url" value="${song.url}" />
+                `);
                 });
             }
-
-            // Инициализация
             addSongField();
+        });
+
+        $('#inputImgFile').on('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: '/Cloudinary/LoadSingleFile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    $('#imgUrlHidden').val(result.url);
+                    $('#previewImage').attr('src', result.url);
+                },
+                error: function (xhr) {
+                    const error = xhr.responseJSON?.error || 'Ошибка загрузки изображения';
+                    alert(error);
+                }
+            });
         });
     </script>
 }
