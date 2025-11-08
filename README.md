@@ -27,9 +27,6 @@
 - **Архитектура:** Clean Architecture (Domain / Application / Infrastructure / Web)
 - **Хранилище медиа:** Cloudinary (Audio/Images)
 - **База данных:** любая SQL (например, PostgreSQL/SQL Server) через EF Core
-- **UI:** Bootstrap 5, частичные представления, TagHelpers
+- **UI:** Bootstrap 5
 - **Логирование:** Microsoft.Extensions.Logging
 
----
-
-## 🧭 Архитектурный срез (Clean Architecture)
